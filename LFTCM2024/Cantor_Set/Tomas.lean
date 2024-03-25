@@ -19,7 +19,10 @@ lemma zero_is_everywhere : ∀ n : ℕ, 0 ∈ pre_Cantor_set n := by
     rw [Set.mem_union]
     left   -- we prove: 0 ∈ T_L '' pre_Cantor_set n
     rw [Set.mem_image]
-    use 0  -- we pick x=0 for the existential
+
+    --  goal: ∃ x, x ∈ pre_Cantor_set n ∧ T_L x = 0
+    use 0  -- we pick x=0
+
     apply And.intro
     · exact ih
     · unfold T_L
