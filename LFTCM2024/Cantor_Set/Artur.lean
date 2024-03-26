@@ -1,1 +1,1 @@
-import LFTCM2024.Cantor_Set.Cantor_Set
+import LFTCM2024.Cantor_Set.Cantor_Team_3
