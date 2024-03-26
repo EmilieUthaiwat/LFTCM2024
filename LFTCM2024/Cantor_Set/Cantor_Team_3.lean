@@ -87,10 +87,8 @@ lemma Cantor_set_preperfect : Preperfect Cantor_set := by
   rw [preperfect_iff_nhds]
 
   intro x h U hU
-  rw [ UniformSpace.mem_nhds_iff_symm] at hU
-  obtain ⟨ t, ht, hsym, htB⟩ := hU
-  rw [Metric.mem_uniformity_dist] at ht
-  obtain ⟨ ε , epos, he ⟩ := ht
+  rw [ Metric.mem_nhds_iff] at hU
+  obtain ⟨ ε , epos, hball ⟩ := hU
 
  --no isolated points
   sorry
