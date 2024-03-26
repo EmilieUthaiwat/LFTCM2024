@@ -1,5 +1,5 @@
-import LFTCM2024.Cantor_Set.Cantor_Set
 import Mathlib.Analysis.Calculus.ContDiff.Basic
+import LFTCM2024.Cantor_Set.Cantor_Team_3
 --import Mathlib.Data.Set
 
 
@@ -51,11 +51,27 @@ lemma zero_in_pre_Cantor_set (n : ℕ ) : (0 : ℝ) ∈ pre_Cantor_set n:= by
 
 #check IsCompact
 
-example : IsCompact (Set.Icc 0 1 : Set ℝ) :=
-isCompact_Icc
+lemma bla: IsCompact (Set.Icc 0 1 : Set ℝ) :=
+ isCompact_Icc
 
 #check unitInterval
 
 --lemma nla: IsCompact.Cantor_set
 
 --IsCompact.{u_1} {X : Type u_1} [inst✝ : TopologicalSpace X] (s : Set X) : Prop
+
+
+lemma Cantor_set_closed' : IsClosed Cantor_set  := by
+  have h : ∀ n, IsClosed (pre_Cantor_set n) := by
+    intro n
+    induction n with
+    | zero =>
+      exact isClosed_Icc
+    | succ n ih =>
+      refine IsClosed.union ?_ ?_
+      · refine (ClosedEmbedding.closed_iff_image_closed ?succ.refine_1.hf).mp ih
+        apply Homeomorph.closedEmbedding Homeomorph_T_L
+      · refine (ClosedEmbedding.closed_iff_image_closed ?succ.refine_2.hf).mp ih
+        apply Homeomorph.closedEmbedding Homeomorph_T_R
+  apply isClosed_iInter
+  exact h
