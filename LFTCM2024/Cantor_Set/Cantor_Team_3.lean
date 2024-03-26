@@ -85,7 +85,16 @@ lemma Cantor_set_metrizable : TopologicalSpace.MetrizableSpace Cantor_set:= by
 
 
 
-lemma Cantor_set_preperfect : Preperfect Cantor_set := by --no isolated points
+lemma Cantor_set_preperfect : Preperfect Cantor_set := by
+  rw [preperfect_iff_nhds]
+
+  intro x h U hU
+  rw [ UniformSpace.mem_nhds_iff_symm] at hU
+  obtain ⟨ t, ht, hsym, htB⟩ := hU
+  rw [Metric.mem_uniformity_dist] at ht
+  obtain ⟨ ε , epos, he ⟩ := ht
+
+ --no isolated points
   sorry
 
 lemma Cantor_set_tot_disc : TotallyDisconnectedSpace Cantor_set := by
