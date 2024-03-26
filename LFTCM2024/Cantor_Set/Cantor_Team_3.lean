@@ -5,6 +5,7 @@ import Mathlib.Topology.Defs.Basic
 import Mathlib.Topology.Connected.TotallyDisconnected
 import Mathlib.Topology.Perfect
 import Mathlib.Analysis.Calculus.ContDiff.Basic
+import Mathlib.Analysis.SpecialFunctions.Log.Base
 
 noncomputable def Homeomorph_T_L : Homeomorph ℝ ℝ where
   toFun := T_L
@@ -89,7 +90,10 @@ lemma Cantor_set_preperfect : Preperfect Cantor_set := by
   intro x h U hU
   rw [ Metric.mem_nhds_iff] at hU
   obtain ⟨ ε , epos, hball ⟩ := hU
-
+  unfold Metric.ball at hball
+  let n := Nat.ceil (Real.logb 3 ε )
+  have def2 : ∃ k : ℕ , (k ≤ 3^(n-1) -1) ∧
+  ((x ∈ Set.uIcc (3*k/3^(n)) ((3*k+1)/3^n) ∨ (x ∈ Set.uIcc ((3*k+2)/(3^n)) ((3*k+3)/3^n) ))) := by sorry
  --no isolated points
   sorry
 
