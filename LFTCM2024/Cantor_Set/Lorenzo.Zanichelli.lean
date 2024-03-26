@@ -1,5 +1,4 @@
-import LFTCM2024.Cantor_Set.Cantor_Set
-import Mathlib.Topology.Defs.Basic
+import LFTCM2024.Cantor_Set.Cantor_Team_3
 
 lemma Cantor_Set_Closed : IsClosed Cantor_Set  := by
   sorry
