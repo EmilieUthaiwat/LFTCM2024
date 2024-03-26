@@ -15,6 +15,7 @@ def Cantor_set := iInf pre_Cantor_set
 lemma inclus : ∀ n, pre_Cantor_set n ⊆  pre_Cantor_set (n-1) := by
  intro n
  apply [set.union_def]
+ -- essai
 
 
 
