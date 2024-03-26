@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import LFTCM2024.Cantor_Set.Cantor_Set
 
 noncomputable
 def T_L (x : ℝ) : ℝ := x/3
@@ -14,7 +15,9 @@ def Cantor_set := iInf pre_Cantor_set
 
 lemma inclus : ∀ n, pre_Cantor_set n ⊆  pre_Cantor_set (n-1) := by
  intro n
- apply [set.union_def]
+ intro x
+ intro h
+
  -- essai
 
 
