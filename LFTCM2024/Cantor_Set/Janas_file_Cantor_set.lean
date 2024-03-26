@@ -49,3 +49,10 @@ lemma zero_in_Cantor : 0 ∈ Cantor_set := by
 unfold Cantor_set
 simp only [Set.iInf_eq_iInter, Set.mem_iInter]
 apply zero_in_pre_Cantor_set
+
+
+/-- instance Cantor_set.metricSpace : MetricSpace Cantor_set :=
+  Subtype.metricSpace --/
+
+#check Set.Icc 0 1
+lemma Cantor_is_compact : IsCompact(Set.Icc 0 1)
