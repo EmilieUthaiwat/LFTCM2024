@@ -41,7 +41,7 @@ lemma Cantor_set_metrizable : TopologicalSpace.MetrizableSpace Cantor_set:= by
 
 
 
-lemma Cantor_set_preperfect : Preperfect Cantor_set := by
+lemma Cantor_set_preperfect : Preperfect Cantor_set := by --no isolated points
   sorry
 
 lemma Cantor_set_tot_disc : TotallyDisconnectedSpace Cantor_set := by
