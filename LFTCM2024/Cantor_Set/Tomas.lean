@@ -5,7 +5,7 @@ import LFTCM2024.Cantor_Set.Cantor_Set
 -- def pre_Cantor_set : ℕ → Set ℝ
 --   | 0 => Set.Icc 0 1
 --   | Nat.succ n => T_L '' pre_Cantor_set (n - 1) ∪ T_R '' pre_Cantor_set (n - 1)
--- 
+--
 -- def Cantor_set := iInf pre_Cantor_set
 
 lemma zero_is_everywhere : ∀ n : ℕ, 0 ∈ pre_Cantor_set n := by
@@ -45,6 +45,3 @@ TODO
 4) Zp ~ Zq for any primes p,q
 5) show that {0,1}^N is a Cantor set
 -/
-
-
-
