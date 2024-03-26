@@ -69,7 +69,9 @@ lemma Cantor_set_closed : IsClosed Cantor_set  := by
 lemma Cantor_set_compact : IsCompact Cantor_set := by
   have : Cantor_set ⊆ Set.Icc 0 1 := by
     unfold Cantor_set
-    sorry
+    intro x hx
+    simp only [Set.iInf_eq_iInter, Set.mem_iInter] at hx
+    exact hx 0
   apply IsCompact.of_isClosed_subset _ Cantor_set_closed this
   exact isCompact_Icc
 
