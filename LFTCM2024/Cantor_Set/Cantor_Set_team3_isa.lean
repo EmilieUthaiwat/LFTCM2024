@@ -10,7 +10,7 @@ lemma eq_of_dist_eq_zero_isa  : ∀ x :  Cantor_set,
 ∀ y : Cantor_set, Cantor_set.metricSpace.dist x  y = 0 → x = y := by
   apply MetricSpace.eq_of_dist_eq_zero
 
-  lemma Cantor_set_preperfect : Preperfect Cantor_set := by
+lemma Cantor_set_preperfect : Preperfect Cantor_set := by
   rw [preperfect_iff_nhds]
 
   intro x h U hU
