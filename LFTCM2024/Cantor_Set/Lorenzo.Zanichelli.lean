@@ -4,6 +4,7 @@ import Mathlib.Topology.Defs.Basic
 import Mathlib.Topology.Connected.TotallyDisconnected
 import Mathlib.Topology.Perfect
 
+
 lemma Cantor_set_closed : IsClosed Cantor_set  := by
   have : ∀ n, IsClosed (pre_Cantor_set n) := by
     intro n
@@ -22,8 +23,6 @@ lemma Cantor_set_closed : IsClosed Cantor_set  := by
   sorry
 
 
-
-
 lemma Cantor_set_compact : IsCompact Cantor_set := by
   have : Cantor_set ⊆ Set.Icc 0 1 := by
     unfold Cantor_set
@@ -32,12 +31,15 @@ lemma Cantor_set_compact : IsCompact Cantor_set := by
   exact isCompact_Icc
 
 
+--the following two lemmas can be ignored
 
 lemma Cantor_set_T2 : T2Space Cantor_set := by
   --exact instT2SpaceSubtypeInstTopologicalSpaceSubtype
   infer_instance
 lemma Cantor_set_metrizable : TopologicalSpace.MetrizableSpace Cantor_set:= by
   infer_instance
+
+
 
 lemma Cantor_set_preperfect : Preperfect Cantor_set := by
   sorry
