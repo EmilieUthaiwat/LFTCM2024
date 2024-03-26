@@ -1,4 +1,7 @@
 import Mathlib.Data.Real.Basic
+import LFTCM2024.Cantor_Set.Cantor_Set
+import Mathlib.Topology.Basic
+
 
 noncomputable
 def T_L (x : ℝ) : ℝ := x/3
