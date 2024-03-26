@@ -1,6 +1,7 @@
 import LFTCM2024.Cantor_Set.Cantor_Set
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic.Linarith
+import Mathlib.Order.SetNotation
 
 lemma zero_in_cantor : 0 ∈ Cantor_set := by
  unfold Cantor_set
@@ -22,7 +23,22 @@ lemma zero_in_cantor : 0 ∈ Cantor_set := by
    exact zero_div 3
 
 lemma cantor_symm (x : ℝ) (h: x ∈ Cantor_set) : (1-x ∈ Cantor_set) := by
-  sorry
+  unfold Cantor_set
+  simp
+  intro i
+  induction i with
+  | zero =>
+    unfold pre_Cantor_set
+    simp
+    unfold Cantor_set at h
+    simp at h
+    specialize h 0
+    unfold pre_Cantor_set at h
+    simp at h
+    exact And.intro h.right h.left
+
+  | succ n ih =>
+    sorry
 
 lemma one_forth_in_cantor : (1/4 ∈ Cantor_set) := by
   unfold Cantor_set
