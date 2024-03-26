@@ -50,21 +50,19 @@ instance Cantor_set.metricSpace : MetricSpace Cantor_set :=
   Subtype.metricSpace
 
 lemma Cantor_set_closed : IsClosed Cantor_set  := by
-  have : ∀ n, IsClosed (pre_Cantor_set n) := by
+  have h : ∀ n, IsClosed (pre_Cantor_set n) := by
     intro n
     induction n with
     | zero =>
-      simp[pre_Cantor_set]
       exact isClosed_Icc
     | succ n ih =>
-      simp[pre_Cantor_set]
       refine IsClosed.union ?_ ?_
       · refine (ClosedEmbedding.closed_iff_image_closed ?succ.refine_1.hf).mp ih
-        sorry
-      ·
-        sorry
-  --refine { isOpen_compl := ?isOpen_compl }
-  sorry
+        apply Homeomorph.closedEmbedding Homeomorph_T_L
+      · refine (ClosedEmbedding.closed_iff_image_closed ?succ.refine_2.hf).mp ih
+        apply Homeomorph.closedEmbedding Homeomorph_T_R
+  apply isClosed_iInter
+  exact h
 
 
 lemma Cantor_set_compact : IsCompact Cantor_set := by
