@@ -9,6 +9,8 @@ import LFTCM2024.Cantor_Set.Cantor_Set
 --
 -- def Cantor_set := iInf pre_Cantor_set
 
+----------------------------
+
 lemma quarters_everywhere : ∀ n : ℕ, 1/4 ∈ pre_Cantor_set n ∧ 3/4 ∈ pre_Cantor_set n := by
   intro n
   induction n with
@@ -21,42 +23,39 @@ lemma quarters_everywhere : ∀ n : ℕ, 1/4 ∈ pre_Cantor_set n ∧ 3/4 ∈ pr
       norm_num
 
     . -- 3/4 is in pre_Cantor_set 0
-      rw [div_nonneg_iff]
       apply And.intro
-
-      -- goal: 0 ≤ 3 ∧ 0 ≤ 4 ∨ 3 ≤ 0 ∧ 4 ≤ 0
-      left
-      simp
-
-      -- goal: 3 / 4 ≤ 1
-      rw [div_le_one_iff]
-      left
-      simp
+      linarith
       linarith
 
   | succ n ih =>
     unfold pre_Cantor_set
     apply And.intro
-    · rw [Set.mem_union]
+    · -- goal: 1 / 4 ∈ pre_Cantor_set n
+      rw [Set.mem_union]
       left
       rw [Set.mem_image]
       exists 3/4
+      exact ⟨ ih.2, by unfold T_L; linarith ⟩
 
-      apply And.intro
-      · exact ih.2
-      · unfold T_L
-        linarith
-
-    · rw [Set.mem_union]
+    · -- goal: 3 / 4 ∈ pre_Cantor_set n
+      rw [Set.mem_union]
       right
       rw [Set.mem_image]
       exists 1/4
+      exact ⟨ ih.1, by unfold T_R; linarith ⟩
 
-      apply And.intro
-      · exact ih.1
-      · unfold T_R
-        linarith
+lemma one_quarters_everywhere : ∀ n : ℕ, 1/4 ∈ pre_Cantor_set n := by
+  intro n
+  exact (quarters_everywhere n).1
 
+theorem one_quarters_is_in : 1/4 ∈ Cantor_set := by
+  unfold Cantor_set
+  unfold iInf
+
+  simp only [Set.sInf_eq_sInter, Set.sInter_range, Set.mem_iInter]
+  exact one_quarters_everywhere
+
+----------------------------
 
 lemma zero_is_everywhere : ∀ n : ℕ, 0 ∈ pre_Cantor_set n := by
   intro n
