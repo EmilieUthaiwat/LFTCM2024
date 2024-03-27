@@ -84,7 +84,7 @@ lemma Cantor_set_metrizable : TopologicalSpace.MetrizableSpace Cantor_set:= by
   infer_instance
 
 
-
+-- A Space is preperfect if it has no isolated points. Check the Mathlib docs for more info
 lemma Cantor_set_preperfect : Preperfect Cantor_set := by
   rw [preperfect_iff_nhds]
 
@@ -92,7 +92,7 @@ lemma Cantor_set_preperfect : Preperfect Cantor_set := by
   rw [ Metric.mem_nhds_iff] at hU
   obtain ⟨ ε , epos, hball ⟩ := hU
 
- --no isolated points
+
   sorry
 
 lemma Cantor_set_tot_disc : TotallyDisconnectedSpace Cantor_set := by
