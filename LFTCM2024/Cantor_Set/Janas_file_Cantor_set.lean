@@ -1,5 +1,5 @@
 import Mathlib.Analysis.Calculus.ContDiff.Basic
-import LFTCM2024.Cantor_Set.Cantor_Team_3
+--import LFTCM2024.Cantor_Set.Cantor_Team_3
 --import Mathlib.Data.Set
 
 

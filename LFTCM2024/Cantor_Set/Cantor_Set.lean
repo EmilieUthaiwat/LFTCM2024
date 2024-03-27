@@ -11,3 +11,4 @@ def pre_Cantor_set : ℕ → Set ℝ
   | Nat.succ n => T_L '' pre_Cantor_set n ∪ T_R '' pre_Cantor_set n
 
 def Cantor_set := iInf pre_Cantor_set
+#check Cantor_set
