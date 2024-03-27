@@ -94,8 +94,8 @@ lemma Cantor_set_preperfect : Preperfect Cantor_set := by
   obtain ⟨ ε , epos, hball ⟩ := hU
   unfold Metric.ball at hball
   let n := Nat.ceil (Real.logb 3 ε )
-  have def2 : ∃ k : ℕ , (k ≤ 3^(n-1) -1) ∧
-  ((x ∈ Set.uIcc (3*k/3^(n)) ((3*k+1)/3^n) ∨ (x ∈ Set.uIcc ((3*k+2)/(3^n)) ((3*k+3)/3^n) ))) := by sorry
+  --have def2 : ∃ k : ℕ , (k ≤ 3^(n-1) -1) ∧
+  --((x ∈ Set.uIcc (3*k/3^(n)) ((3*k+1)/3^n) ∨ (x ∈ Set.uIcc ((3*k+2)/(3^n)) ((3*k+3)/3^n) ))) := by sorry
  --no isolated points
   sorry
 
