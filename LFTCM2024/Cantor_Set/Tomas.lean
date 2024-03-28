@@ -10,6 +10,13 @@ import LFTCM2024.Cantor_Set.Cantor_Set
 --
 -- def Cantor_set := iInf pre_Cantor_set
 
+lemma obvious_inclusion : Cantor_set ⊆ Set.Icc 0 1 := by
+  intro x
+  unfold Cantor_set
+  intro h
+  simp only [Set.iInf_eq_iInter, Set.mem_iInter] at h
+  exact h 0
+
 ----------------------------
 
 lemma map_to_product (x : ℝ) : (ℕ → Bool) := by
@@ -27,7 +34,7 @@ lemma map_from_product_one (f : ℕ → Bool) (n : ℕ) : pre_Cantor_set n := by
   induction n with
   | zero =>
     unfold pre_Cantor_set
-    use 1/2 
+    use 1/2
     norm_num
   | succ n2 ih  =>
     let ⟨el, prf⟩ := ih
