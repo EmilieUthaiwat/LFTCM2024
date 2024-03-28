@@ -1,8 +1,46 @@
 import LFTCM2024.Cantor_Set.Cantor_Team_3
+import LFTCM2024.Cantor_Set.Cantor_Set_Team_1
 -- import Mathlib.Topology.MetricSpace.Basic
 
 -- instance Cantor_set.metricSpace : MetricSpace Cantor_set :=
 --  Subtype.metricSpace
+
+
+lemma foo (hx : x ∈  Cantor_set) (n :ℕ) (hnice : ∀ a<n, x≠ (a:ℝ)/3^n) :
+∀m<n, (((Nat.floor (x*3^n))/3^n):ℝ)∈ Set.Icc (((Nat.floor (x*3^m))/3^m):ℝ) (((Nat.floor (x*3^m))/3^m):ℝ) := by
+sorry
+
+lemma extremuses_of_Cantor_set_nice_x  (hx : x ∈  Cantor_set) (n :ℕ) (hnice : ∀ a<n, x≠ (a:ℝ)/3^n) :
+(((Nat.floor (x*3^n))/3^n):ℝ)∈ Cantor_set :=--∧ (((Nat.ceil (x.1*3^n))/3^n):ℝ) ∈ Cantor_set :=
+by
+suffices h1:  ∀ m :ℕ,  ((((Nat.floor (x*3^n))/3^n):ℝ)∈ pre_Cantor_set_Icc m) from by
+  sorry
+intro m
+by_cases hm : m≥  n
+· unfold pre_Cantor_set_Icc
+  simp_rw [Cantor_set, pre_Cantor_set] at hx
+  rw  [Set.mem_iUnion]
+  set k := Nat.floor (x*3^(n+1)) with k_def
+  simp_rw [Set.mem_iUnion]
+  -- simp [pre_pre_Cantor_set_Icc​]
+
+  use 3^(m-n)*k
+
+
+  refine ⟨ ?_, ?_⟩
+  refine hm
+
+
+
+  sorry
+· sorry
+sorry
+
+
+
+
+
+
 
 #check Cantor_set.metricSpace
 
@@ -58,6 +96,19 @@ lemma not_alone (n : ℕ ) (x : ℝ ) (h : n ≠ 0)  (h2 : x ∈ Cantor_set) :
   -- apply in_one_interval at h2
   cases hk2 with
   | inl h =>
+    cases em  ( x = a n k) with
+    | inl H =>
+    use (b n k)
+    rewrite [H]
+    constructor
+    unfold a n k
+    simp
+    unfold b n k
+
+    · done
+    · done
+    | inr H => sorry
+
     sorry
   | inr h =>
     sorry

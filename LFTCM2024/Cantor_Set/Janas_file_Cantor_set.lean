@@ -224,8 +224,45 @@ lemma Is_TotallyDisconnected_Cantor_attempt2 : IsTotallyDisconnected Cantor_set 
 
     obtain ⟨N, hN⟩ := hd
     obtain ⟨z, hz⟩ : ∃ z : ℝ, z ∉ Cantor_set ∧ x < z ∧ z < y := by
-     use x+1/2*3^N
-     sorry
+     use x+1/(2*3^N)
+     constructor
+     · unfold Cantor_set
+       simp only [one_div, mul_inv_rev, Set.iInf_eq_iInter, Set.mem_iInter, not_forall]
+       use N
+       intro hz
+       unfold pre_Cantor_set at hz
+       have hNzero : 0 ≠ N := by sorry
+       match N with
+        | 0 =>
+          apply hNzero
+          rfl
+        | k + 1 =>
+          simp only at hz
+          simp at hz
+          rcases hz with h1 | h2
+          · rcases h1 with ⟨xProxy, h1⟩
+            rcases h1 with ⟨h1, h11⟩
+            sorry
+          · sorry
+     · constructor
+       · simp only [one_div, mul_inv_rev, lt_add_iff_pos_right, gt_iff_lt, inv_pos, Nat.ofNat_pos,
+         pow_pos, mul_pos_iff_of_pos_left]
+       · ring_nf
+         ring_nf at hN
+         have hTemporary : x + |y - x| * (1 / 2) < y := by
+          have hModule : |y - x| = y - x := by
+            simp only [abs_eq_self, sub_nonneg]
+            exact le_of_lt xsmallery
+          rw [hModule]
+          linarith
+         have hTemporary2 : x + (1 / 3) ^ N * (1 / 2) < x + |y - x| * (1 / 2) := by
+          simp only [one_div, inv_pow, add_lt_add_iff_left, gt_iff_lt, inv_pos, Nat.ofNat_pos,
+            mul_lt_mul_right]
+          rw [@one_div] at hN
+          simp only [inv_pow] at hN
+          assumption
+         apply lt_trans hTemporary2
+         assumption
     -- use z= x + 1/2*3^N
     set A := Set.Iio z
     set B := Set.Ioi z
