@@ -4,12 +4,7 @@ import Mathlib.Tactic.Linarith
 import LFTCM2024.Cantor_Set.Cantor_Set
 import LFTCM2024.Cantor_Set.Cantor_Team_3
 
-
--- def pre_Cantor_set : ℕ → Set ℝ
---   | 0 => Set.Icc 0 1
---   | Nat.succ n => T_L '' pre_Cantor_set (n - 1) ∪ T_R '' pre_Cantor_set (n - 1)
---
--- def Cantor_set := iInf pre_Cantor_set
+-- proofs of 0, 1/4 (and 3/4) are in the triadic Cantor
 
 lemma quarters_everywhere : ∀ n : ℕ, 1/4 ∈ pre_Cantor_set n ∧ 3/4 ∈ pre_Cantor_set n := by
   intro n
@@ -96,17 +91,3 @@ theorem zero_is_in : 0 ∈ Cantor_set := by
 
   simp only [Set.sInf_eq_sInter, Set.sInter_range, Set.mem_iInter]
   exact zero_is_everywhere
-
-
-
--- show that Cantor is in [0,1]
-
-
-lemma Cantor_set_compact_bis : IsCompact Cantor_set := by
-  have : Cantor_set ⊆ Set.Icc 0 1 := by
-    unfold Cantor_set
-    intro x hx
-    simp only [Set.iInf_eq_iInter, Set.mem_iInter] at hx
-    exact hx 0
-  apply IsCompact.of_isClosed_subset _ Cantor_set_closed this
-  exact isCompact_Icc
