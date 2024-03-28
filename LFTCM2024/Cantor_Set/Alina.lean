@@ -1,6 +1,7 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Order.SetNotation
-import Mathlib.Tactic.Linarith
+import Mathlib.Tactic
+import Mathlib.Algebra.Order.WithZero
 
 noncomputable
 def T_L (x : ℝ) : ℝ := x/3
@@ -72,10 +73,8 @@ lemma pre_Cantor_set_mem (x : ℝ) {n : ℕ} (hn : 1 ≤ n) : x ∈ pre_Cantor_s
     ∃ k, k ≤ 3^(n-1)-1 ∧
     (x ∈ Set.Icc ((3*k/3^n) : ℝ) ((3*k+1)/3^n) ∨ x ∈ Set.Icc (((3*k+2)/3^n) : ℝ) ((3*k+3)/3^n)) := sorry
 
-section linarith
-
-lemma third_Cantor_set_Union {n : ℕ} (hn : 1 ≤ n):
-T_L '' (pre_Cantor_set_Icc (n)) = pre_Cantor_set_Icc (n+1) ∩ Set.Icc (0) (1/3) := by
+lemma third_Cantor_set_Union {n : ℕ} (hn : 1 ≤ n) :
+  T_L '' (pre_Cantor_set_Icc n) = pre_Cantor_set_Icc (n+1) ∩ Set.Icc (0) (1/3) := by
   ext x
   constructor
   · intro hx
@@ -97,14 +96,23 @@ T_L '' (pre_Cantor_set_Icc (n)) = pre_Cantor_set_Icc (n+1) ∩ Set.Icc (0) (1/3)
           rw [<- hy_TL]
           simp
           simp at H_left
+          rcases H_left with ⟨H_left_1, H_left_2⟩
           constructor
-          --· have (h : 3 * k / 3 ^ n ≤ y) := by
-          --    apply H_left.1
-
+          · apply_fun (fun x : ℝ => x / 3) at H_left_1
+            norm_num at H_left_1
+            rw [pow_succ, mul_comm _ (_ ^ _), ← div_div]
+            exact H_left_1
+            exact monotone_id.div_const (by norm_num)
+          · apply_fun (fun x : ℝ => x / 3) at H_left_2
+            norm_num at H_left_2
+            rw [pow_succ, mul_comm _ (_ ^ _), ← div_div]
+            exact H_left_2
+            exact monotone_id.div_const (by norm_num)
+         --constructor
+          --· unfold pre_Cantor_set_Icc at hx
+          --rw [pre_Cantor_set_mem x (by linarith)]
       · sorry
-
-
-end linarith
+    · sorry
 
 
 lemma twothirds_Cantor_set_Union (n : ℕ) :
