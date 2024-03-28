@@ -1,48 +1,45 @@
 import LFTCM2024.Cantor_Set.Cantor_Team_3
-import Mathlib.Topology.Metrizable.Basic
-import Mathlib.Topology.Defs.Basic
-import Mathlib.Topology.Connected.TotallyDisconnected
-import Mathlib.Topology.Perfect
+import Mathlib.Analysis.SpecialFunctions.Log.Base
 
+-- --lemma Cantor_set_preperfect : Preperfect Cantor_set := by --no isolated points
+--   intro x
+--   intro hx
+--   let ε : ℝ
+--     let n : ℕ, n>
+--   by
+--     done
+lemma extremuses_of_Cantor_set (n:ℕ) (k:ℕ) (h : k≤ 3^n) :
+  (((k : ℝ)/(3^n)) ∈ Cantor_set) := by
 
-lemma Cantor_set_closed : IsClosed Cantor_set  := by
-  have : ∀ n, IsClosed (pre_Cantor_set n) := by
-    intro n
-    induction n with
-    | zero =>
-      simp[pre_Cantor_set]
-      exact isClosed_Icc
-    | succ n ih =>
-      simp[pre_Cantor_set]
-      refine IsClosed.union ?_ ?_
-      · refine (ClosedEmbedding.closed_iff_image_closed ?succ.refine_1.hf).mp ih
+  sorry
+
+lemma LZCantor_set_preperfect : Preperfect Cantor_set := by
+  rw [preperfect_iff_nhds]
+
+  intro x hx U hU
+  rw [ Metric.mem_nhds_iff] at hU
+  obtain ⟨ ε , epos, hball ⟩ := hU
+  let n : ℕ  := (Nat.ceil (Real.logb 3 (1/ε)))+1
+  let y : ℝ := (Nat.ceil (x*3^n))/3^n
+  by_cases hy : y≠ x
+  · have : y∈ U∩ Cantor_set := by
+      constructor
+      · apply hball
+        simp
         sorry
-      ·
+      · apply extremuses_of_Cantor_set
+        simp
         sorry
-  --refine { isOpen_compl := ?isOpen_compl }
-  sorry
-
-
-lemma Cantor_set_compact : IsCompact Cantor_set := by
-  have : Cantor_set ⊆ Set.Icc 0 1 := by
-    unfold Cantor_set
-    sorry
-  apply IsCompact.of_isClosed_subset _ Cantor_set_closed this
-  exact isCompact_Icc
-
-
---the following two lemmas can be ignored
-
-lemma Cantor_set_T2 : T2Space Cantor_set := by
-  --exact instT2SpaceSubtypeInstTopologicalSpaceSubtype
-  infer_instance
-lemma Cantor_set_metrizable : TopologicalSpace.MetrizableSpace Cantor_set:= by
-  infer_instance
-
-
-
-lemma Cantor_set_preperfect : Preperfect Cantor_set := by --no isolated points
-  sorry
-
-lemma Cantor_set_tot_disc : TotallyDisconnectedSpace Cantor_set := by
-  sorry
+    use y
+  · let z : ℝ := (Nat.ceil (x*3^n)-(1) : ℕ)/3^n
+    have : z∈ U∩ Cantor_set := by
+      constructor
+      · apply hball
+        simp
+        sorry
+      · apply extremuses_of_Cantor_set
+        simp
+        sorry
+    have : z≠ x :=
+      sorry
+    use z

@@ -12,25 +12,52 @@ import LFTCM2024.Cantor_Set.Cantor_Set
 
 ----------------------------
 
-lemma map_to_product {x : ℝ} : (ℕ → Prop) := by
+lemma map_to_product (x : ℝ) : (ℕ → Bool) := by
   intro n
-  exact T_L x ∈ pre_Cantor_set n
-  -- TODO question: is there a way to make this ℕ → Bool ?
+  let p := T_L x ∈ pre_Cantor_set n
+
+  let d : Decidable p := by
+    by_cases c : p   -- use excluded middle on p
+    · exact isTrue c
+    · exact isFalse c
+    -- note: tactic `classical` solves this goal but then exact below fails...
+  exact decide p
+
+lemma map_from_product_one (f : ℕ → Bool) (n : ℕ) : pre_Cantor_set n := by
+  induction n with
+  | zero =>
+    unfold pre_Cantor_set
+    use 1/2 
+    norm_num
+  | succ n2 ih  =>
+    let ⟨el, prf⟩ := ih
+    if f n2
+      then use T_L el
+           unfold pre_Cantor_set
+           rw [Set.mem_union]
+           left
+           simp only [Set.mem_image]
+           use el
+      else use T_R el
+           unfold pre_Cantor_set
+           rw [Set.mem_union]
+           right
+           simp only [Set.mem_image]
+           use el
 
 
--- TODO this is not computable...
-def Cantor_sep_index {x : ℝ} {y : ℝ} (hx : x ∈ Cantor_set) (hy : y ∈ Cantor_set) (hf : x < y) : ℕ  := by
+-- inspired by https://math.stackexchange.com/questions/253535/the-cantor-ternary-set-is-totally-disconnected
+lemma Cantor_sep_index (x : ℝ) (y : ℝ) : ℕ  := by
   -- we know that no later than in n : ℕ, 3^(-n) < |x-y|
   -- then for this n we have that x and y appear in different copies of T_L/T_R image of pre_Cantor_set n
   let a := abs (x-y)
   let l := Real.logb 3 a
   exact Nat.ceil l
 
-  -- Maybe it would be better to compute the function iteratively
+-- Maybe it would be better to compute the function iteratively
+-- lemma Cantor_sep_index {x : ℝ} {y : ℝ} (hx : x ∈ Cantor_set) (hy : y ∈ Cantor_set) (hf : x < y) : ℕ 
   -- let s : Set ℕ := { n | 1/(3^n) < a }
   -- WANT stg like: exact max s
-  --
-  -- inspired by https://math.stackexchange.com/questions/253535/the-cantor-ternary-set-is-totally-disconnected
 
 
 -- lemma separate_in_pre_Cantor (x : Cantor_set) (y : Cantor_set) (hf : x < y) : x ∈ T_L '' pre_Cantor_set (Cantor_sep_index x y hf) ∧ y ∈ T_R '' pre_Cantor_set (Cantor_sep_index x y hf) := by sorry
