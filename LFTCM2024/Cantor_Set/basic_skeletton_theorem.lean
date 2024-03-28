@@ -20,6 +20,7 @@ import Mathlib.Analysis.SpecialFunctions.Log.Base
 
 open TopologicalSpace
 -- we don't need to precise that it is metrizable since it is already a subset of ℝ
-theorem Brouwer_ordered (E : Set ℝ) {hP : Preperfect E} {hT : TotallyDisconnectedSpace E} :E ≃ Cantor_set := by
+theorem Brouwer_ordered (E : Set ℝ) {hP : Preperfect E} {hT : TotallyDisconnectedSpace E} {hC : IsCompact E} :E ≃ Cantor_set := by
   set m:= Inf E
   set M:= Sup E
+  sorry
