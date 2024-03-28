@@ -159,7 +159,11 @@ lemma Is_TotallyDisconnected_Cantor_attempt2 : IsTotallyDisconnected Cantor_set 
     obtain ⟨N, hN⟩ := hd
     obtain ⟨z, hz⟩ : ∃ z : ℝ, z ∉ Cantor_set ∧ x < z ∧ z < y := by
      use x+1/2*3^N
-     sorry
+     constructor
+     · sorry
+     · constructor
+       ·sorry
+       ·sorry
     -- use z= x + 1/2*3^N
     set A := Set.Iio z
     set B := Set.Ioi z
