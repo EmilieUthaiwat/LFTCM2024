@@ -9,7 +9,18 @@ lemma Cantor_set_tot_disc' : TotallyDisconnectedSpace Cantor_set := by
     exact lt_trichotomy x y
   --obtain (h1 | h2) := h
   rcases (lt_trichotomy x y) with h1 | h2
-  · have hd : ∃ N : ℕ, N > 0 ∧ 1/ (3^N) < |(y:ℝ) - (x:ℝ)| := by sorry
+  · have hxy : |(y:ℝ) - (x:ℝ)| < 1 := by sorry
+    have hd : ∃ N : ℕ, 1/(3^N) < |(y:ℝ) - (x:ℝ)| := by
+      have usefulfact := exists_pow_lt_of_lt_one (x := |(y:ℝ) - (x:ℝ)|) (y := (1/3 : ℝ))
+      simp at usefulfact
+      simp
+      apply usefulfact
+      · intro nh
+        apply nhxy
+        have : (x : ℝ) = y := by linarith
+        exact SetCoe.ext this
+      · norm_num
+
     obtain ⟨z, hz⟩ : ∃ z : ℝ, z ∉ Cantor_set ∧ x < z ∧ z < y := by sorry
     -- use z= x + 1/2*3^N
     have A := Set.Ioo 0 z
