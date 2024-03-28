@@ -158,9 +158,26 @@ lemma Is_TotallyDisconnected_Cantor_attempt2 : IsTotallyDisconnected Cantor_set 
     have hxy : |y - x| < 1 := by sorry
     obtain ⟨N, hN⟩ := hd
     obtain ⟨z, hz⟩ : ∃ z : ℝ, z ∉ Cantor_set ∧ x < z ∧ z < y := by
-     use x+1/2*3^N
+     use x+1/(2*3^N)
      constructor
-     · sorry
+     · unfold Cantor_set
+       simp only [one_div, mul_inv_rev, Set.iInf_eq_iInter, Set.mem_iInter, not_forall]
+       use N
+       intro hz
+       unfold pre_Cantor_set at hz
+       have hNzero : 0 ≠ N := by sorry
+       match N with
+        | 0 =>
+          apply hNzero
+          rfl
+        | k + 1 =>
+          simp only at hz
+          simp at hz
+          rcases hz with h1 | h2
+          · rcases h1 with ⟨xProxy, h1⟩
+            rcases h1 with ⟨h1, h11⟩
+            sorry
+          · sorry
      · constructor
        ·sorry
        ·sorry
