@@ -76,7 +76,7 @@ lemma Cantor_set_compact : IsCompact Cantor_set := by
   exact isCompact_Icc
 
 
---the following two lemmas can be ignored
+--the following two lemmas are totally obvious
 
 lemma Cantor_set_T2 : T2Space Cantor_set := by
   --exact instT2SpaceSubtypeInstTopologicalSpaceSubtype
