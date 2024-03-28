@@ -50,10 +50,25 @@ simp only [pre_Cantor_set_Icc, pre_pre_Cantor_set_Icc, ge_iff_le, le_refl, tsub_
   Set.iUnion_iUnion_eq_left, Nat.cast_zero, mul_zero, zero_div, zero_add, one_div, ne_eq,
   OfNat.ofNat_ne_zero, not_false_eq_true, div_self]
 
-
 theorem inter_Cantor_set_Union_Icc_eq_pre_Cantor_set (n : ℕ) :
   pre_Cantor_set (n+1) = ⋂ (i : ℕ) (hi : i ≤ n), pre_Cantor_set_Icc (i+1) := by
-  sorry
+  induction n with
+  | zero =>
+    simp only [Nat.zero_eq, zero_add, nonpos_iff_eq_zero, Set.iInter_iInter_eq_left]
+    rw[pre_Cantor_set, pre_Cantor_set_Icc]
+    simp only [ge_iff_le, le_refl, tsub_eq_zero_of_le, pow_zero, nonpos_iff_eq_zero,
+      Set.iUnion_iUnion_eq_left]
+    unfold pre_Cantor_set pre_pre_Cantor_set_Icc
+    simp only [Nat.cast_zero, mul_zero, pow_one, zero_div, zero_add, one_div, ne_eq,
+      OfNat.ofNat_ne_zero, not_false_eq_true, div_self]
+    have h1 :  T_L '' Set.Icc 0 1 = Set.Icc 0 (1/3) := by
+      sorry
+    have h2 :  T_R '' Set.Icc 0 1 = Set.Icc (2/3) 1 := by
+      sorry
+    rw [h1, one_div, h2]
+  | succ n ih =>
+
+    sorry
   -- The proof follows these steps:
   -- We use induction on n. pre_Cantor_set 1 = Cantor_set_Union_Icc 1 by unfolding (I guess)
   -- So assume pre_Cantor_set n = ⋂ Cantor_set_Union_Icc i, for 1≤ i ≤ n
@@ -65,10 +80,13 @@ theorem inter_Cantor_set_Union_Icc_eq_pre_Cantor_set (n : ℕ) :
   --  Now the right hand side is equal to ⋂ Cantor_set_Union_Icc (i+1) and we are done.
 
 theorem Cantor_set_eq_Icc : Cantor_set = Cantor_set_Icc := by
-  sorry
--- This proof is by using the fact that Cantor_set_Icc = ⋂ (n : ℕ) Cantor_set_union_Icc n
--- We have ⋂ (n : ℕ) Cantor_set_union_Icc n = Cantor_set_union_Icc 0 ∩ ⋂ (n : ℕ) Cantor_set_union_Icc (n+1)
+  unfold Cantor_set Cantor_set_Icc
+  rw [Set.iInf_eq_iInter]
+  have h : ⋂ i, pre_Cantor_set_Icc i = ⋂ (i : ℕ) ( (j: ℕ) ∩ j (hj : j ≤ i), pre_Cantor_set_Icc (j+1)) := by
+   sorry
+  rw [h]
 
+  sorry
 
 -- /- Function which takes n and k as input and gives the union of two closed intervals as output-/
 -- def Cantor_set_union_Icc (n k : ℕ) : Set ℝ :=
