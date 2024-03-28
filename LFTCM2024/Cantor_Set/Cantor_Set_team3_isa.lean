@@ -54,9 +54,9 @@ lemma distance_n (n k :ℕ ) :
 
 lemma not_alone (n : ℕ ) (x : ℝ ) (h : n ≠ 0)  (h2 : x ∈ Cantor_set) :
 (∃ y : ℝ, (y≠ x)∧ (y ∈ Cantor_set) ∧   (dist y x ≤ 1/3^n)) := by
-  obtain ⟨ y , hy1, hy2⟩  := in_one_interval x h2 n h
+  obtain ⟨ k , hk1, hk2⟩  := in_one_interval x h2 n h
   -- apply in_one_interval at h2
-  cases hy2 with
+  cases hk2 with
   | inl h =>
     sorry
   | inr h =>
