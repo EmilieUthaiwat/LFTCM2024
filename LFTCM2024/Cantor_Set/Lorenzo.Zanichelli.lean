@@ -1,4 +1,5 @@
 import LFTCM2024.Cantor_Set.Cantor_Team_3
+import LFTCM2024.Cantor_Set.Cantor_Set_Team_1
 
 -- --lemma Cantor_set_preperfect : Preperfect Cantor_set := by --no isolated points
 --   intro x
@@ -43,10 +44,11 @@ sorry
 lemma extremuses_of_Cantor_set_nice_x  (hx : x ∈  Cantor_set) (n :ℕ) (hnice : ∀ a<n, x≠ (a:ℝ)/3^n) :
 (((Nat.floor (x*3^n))/3^n):ℝ)∈ Cantor_set :=--∧ (((Nat.ceil (x.1*3^n))/3^n):ℝ) ∈ Cantor_set :=
 by
-suffices h1:  ∀ m :ℕ,  ((((Nat.floor (x*3^n))/3^n):ℝ)∈ Cantor_set_Union_Icc m) from by
-  done
+suffices h1:  ∀ m :ℕ,  ((((Nat.floor (x*3^n))/3^n):ℝ)∈ pre_Cantor_set_Icc m) from by
+  sorry
 by_cases hm : m≥ n
-· sorry
+·
+  sorry
 · sorry
 sorry
 
