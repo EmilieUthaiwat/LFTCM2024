@@ -76,7 +76,7 @@ lemma Cantor_set_compact : IsCompact Cantor_set := by
   exact isCompact_Icc
 
 
---the following two lemmas can be ignored
+--the following two lemmas are totally obvious
 
 lemma Cantor_set_T2 : T2Space Cantor_set := by
   --exact instT2SpaceSubtypeInstTopologicalSpaceSubtype
@@ -100,4 +100,29 @@ lemma Cantor_set_preperfect : Preperfect Cantor_set := by
   sorry
 
 lemma Cantor_set_tot_disc : TotallyDisconnectedSpace Cantor_set := by
-  sorry
+  apply (totallyDisconnectedSpace_iff Cantor_set).2
+  intro S hS h₁S x h₁x y h₁y
+  by_contra nhxy
+  unfold IsPreconnected at h₁S
+  have h : x < y ∨ x = y ∨ y < x := by
+    exact lt_trichotomy x y
+  rcases (lt_trichotomy x y) with xsmallery | ysmallerx
+  · have hN : ∃ N : ℕ, N > 0 ∧ 1/ (3^N) < |(y:ℝ) - (x:ℝ)| := by sorry
+    obtain ⟨z, hz⟩ : ∃ z : ℝ, z ∉ Cantor_set ∧ x < z ∧ z < y := by sorry
+    -- use z= x + 1/2*3^N
+    set A : Set Cantor_set := {x | (x: ℝ) ∈ Set.Ioo 0 z}
+    set B : Set Cantor_set := {x | (x: ℝ) ∈ Set.Ioo z 1}
+    have hfinal_1 : IsOpen A ∧ IsOpen B ∧ Cantor_set ⊆ A ∪ B ∧ Set.Nonempty (Cantor_set ∪ A) ∧
+       Set.Nonempty (Cantor_set ∪ B) := by sorry
+    have bla : ¬ Set.Nonempty (S ∩ (A ∩ B)) := by sorry
+    apply bla
+    apply h₁S
+    · sorry
+    · sorry
+    · sorry
+    · sorry
+    · sorry
+  · rcases ysmallerx with h1 | h2
+    · apply nhxy
+      assumption
+    · sorry
