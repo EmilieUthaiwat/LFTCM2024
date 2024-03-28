@@ -66,39 +66,23 @@ theorem C''_subset_Cantor_set_Union_Icc
 --/
 
 
-lemma quarters_everywhere : ∀ n : ℕ, 1/4 ∈ pre_Cantor_set n ∧ 3/4 ∈ pre_Cantor_set n := by
-  intro n
+lemma quarters_everywhere (n : ℕ) : 1/4 ∈ pre_Cantor_set n ∧ 3/4 ∈ pre_Cantor_set n := by
   induction n with
   | zero =>
     unfold pre_Cantor_set
-    simp only [one_div, Set.mem_Icc, inv_nonneg, Nat.ofNat_nonneg, true_and]
-    apply And.intro
-    · -- 1/4 is in pre_Cantor_set 0
-      rw [inv_le_one_iff]
-      norm_num
-
-    . -- 3/4 is in pre_Cantor_set 0
-      exact ⟨ by linarith, by linarith ⟩
+    simp only [Set.mem_Icc, inv_nonneg, Nat.ofNat_nonneg, true_and]
+    refine ⟨⟨?_, ?_ ⟩,?_,?_⟩ <;> linarith
 
   | succ n ih =>
     unfold pre_Cantor_set
     apply And.intro
     · -- goal: 1 / 4 ∈ pre_Cantor_set n
-      rw [Set.mem_union]
-      left
-      rw [Set.mem_image]
-      exists 3/4
-      exact ⟨ ih.2, by unfold T_L; linarith ⟩
+      exact Or.inl ⟨ 3/4, ih.2, by unfold T_L; linarith ⟩
 
     · -- goal: 3 / 4 ∈ pre_Cantor_set n
-      rw [Set.mem_union]
-      right
-      rw [Set.mem_image]
-      exact ⟨1/4, ih.1, by unfold T_R; linarith ⟩
+      exact Or.inr ⟨1/4, ih.1, by unfold T_R; linarith ⟩
 
-lemma one_quarters_everywhere : ∀ n : ℕ, 1/4 ∈ pre_Cantor_set n := by
-  intro n
-  exact (quarters_everywhere n).1
+lemma one_quarters_everywhere (n : ℕ) : 1/4 ∈ pre_Cantor_set n := (quarters_everywhere n).1
 
 theorem one_quarters_is_in : 1/4 ∈ Cantor_set := by
   unfold Cantor_set
@@ -157,6 +141,7 @@ noncomputable def Homeomorph_T_L : Homeomorph ℝ ℝ where
   continuous_invFun := by
     continuity
 
+@[simps]
 noncomputable def Homeomorph_T_R : Homeomorph ℝ ℝ where
   toFun := T_R
   invFun := fun x ↦ 3*x - 2
