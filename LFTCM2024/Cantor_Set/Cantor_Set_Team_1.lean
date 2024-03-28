@@ -18,7 +18,7 @@ def h (n : ℕ) : Set.Icc 0 n → Set ℝ := fun l => Cantor_set_Union_Icc l
 
 def C'' : ℕ → Set ℝ :=
   fun n => (Cantor_set_Union_Icc n ∩ Cantor_set_Union_Icc (n-1)) ∪ iInf (h n)
-
+````````````````````````````````````````````
 theorem Cantor_set_Union_Icc_subset :
     ∀ n, Cantor_set_Union_Icc n ⊆ Cantor_set_Union_Icc (n+1) := by
   intro n
