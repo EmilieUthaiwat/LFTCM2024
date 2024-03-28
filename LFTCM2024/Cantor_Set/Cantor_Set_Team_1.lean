@@ -12,7 +12,16 @@ def g : Set.Ici 1 → Set ℝ := fun n => Cantor_set_Union_Icc n
 
 def Cantor_set_Icc := iInf g
 
+def h (n : ℕ) : Set.Icc 0 n → Set ℝ := fun l => Cantor_set_Union_Icc l
 
+def C'' : ℕ → Set ℝ :=
+  fun n => (Cantor_set_Union_Icc n ∩ Cantor_set_Union_Icc (n-1)) ∪ iInf (h n)
+
+theorem Cantor_set_Union_Icc_subset : ∀ n, Cantor_set_Union_Icc n ⊆ Cantor_set_Union_Icc (n+1) := by
+  sorry
+
+theorem Cantor_set_Union_Icc_subset_C'' (n : ℕ) : Cantor_set_Union_Icc (n+1) ⊆ C'' (n+1) := by
+  sorry
 
 theorem Cantor_set_eq_Icc : Cantor_set = Cantor_set_Icc := by
-sorry
+  sorry
