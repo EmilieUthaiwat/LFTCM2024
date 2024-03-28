@@ -37,21 +37,14 @@ import LFTCM2024.Cantor_Set.Cantor_Set_Team_1
 --   have h : _ := Ceil_minus_one_aux (- x)
 --   simpa using h
 lemma cipher (m n b : ℕ )(hb: b>1) (hm : n≤m) : ∀x:ℝ, (Nat.ceil (x*(b^m)))/(b^m)∈
-Set.Icc ((Nat.ceil (x*b^n))/(b^n)) (Nat.ceil (x*b^n)+1)/(b^m) := by
-
+Set.Icc ((Nat.ceil (x*b^n))/(b^n)) ((Nat.ceil (x*b^n)+1)/(b^m)) := by
+simp
+sorry
 
 lemma foo (hx : x ∈  Cantor_set) (n m :ℕ) (hm: m<n)(hnice : ∀ a<n, x≠ (a:ℝ)/3^n) :
 (((Nat.floor (x*3^n))/3^n):ℝ)∈ Set.Icc (((Nat.floor (x*3^m))/3^m):ℝ) ((((Nat.floor (x*3^m))+1)/3^m):ℝ) := by
-simp
-constructor
-· refine div_le_div_iff ?_ ?_
-  ·
-  ·
-· refine div_le_div_iff ?_ ?_
-  · positivity
-  · done
-  · done
-  · done
+apply cipher
+sorry
 
 lemma bar (hx : x ∈  Cantor_set) (Cantor_set_metrizable :ℕ) (hnice : ∀ a<n, x≠ (a:ℝ)/3^n) :
 Set.Icc (((Nat.floor (x*3^m))/3^m):ℝ) (((Nat.floor (x*3^m)+1)/3^m):ℝ)⊆ pre_Cantor_set_Icc m := by
@@ -72,7 +65,6 @@ by_cases hm : m ≥ n
   assumption
   assumption
   assumption
-
 noncomputable
 def function_extremuses_Cantor_set(n:ℕ):  Cantor_set → Cantor_set :=
   fun x =>

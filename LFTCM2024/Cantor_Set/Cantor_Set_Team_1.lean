@@ -32,18 +32,24 @@ theorem C''_subset_Cantor_set_Union_Icc
   refine' Set.iInter₂_subset n _
   trivial
 
-lemma third_Cantor_set_Union (n : ℕ) :
+lemma third_Cantor_set_Union {n : ℕ} (hn : 1 ≤ n) :
 T_L '' (pre_Cantor_set_Icc n) = pre_Cantor_set_Icc (n+1) ∩ Set.Icc 0 (1/3) := by
 sorry
 
 
-lemma twothirds_Cantor_set_Union (n : ℕ) :
+lemma twothirds_Cantor_set_Union {n : ℕ} (hn : 1 ≤ n) :
 T_R '' (pre_Cantor_set_Icc n) =pre_Cantor_set_Icc (n+1) ∩ Set.Icc (2/3) 1 := by
 sorry
 
-lemma Cantor_set_Union_TL_TR (n : ℕ) :
-T_L '' (pre_Cantor_set_Icc n) ∪ T_R '' (pre_Cantor_set_Icc n) = pre_Cantor_set_Icc (n+1) ∩ pre_Cantor_set_Icc 1 := by
-sorry
+lemma Cantor_set_Union_TL_TR {n : ℕ} (hn : 1 ≤ n):
+T_L '' (pre_Cantor_set_Icc n) ∪ T_R '' (pre_Cantor_set_Icc n) =
+pre_Cantor_set_Icc (n+1) ∩ pre_Cantor_set_Icc 1 := by
+rw [third_Cantor_set_Union hn, twothirds_Cantor_set_Union hn, ← Set.inter_union_distrib_left]
+simp only [pre_Cantor_set_Icc, pre_pre_Cantor_set_Icc, ge_iff_le, le_refl, tsub_eq_zero_of_le,
+  pow_zero, nonpos_iff_eq_zero, pow_one,
+  Set.iUnion_iUnion_eq_left, Nat.cast_zero, mul_zero, zero_div, zero_add, one_div, ne_eq,
+  OfNat.ofNat_ne_zero, not_false_eq_true, div_self]
+
 
 theorem inter_Cantor_set_Union_Icc_eq_pre_Cantor_set (n : ℕ) :
   pre_Cantor_set (n+1) = ⋂ (i : ℕ) (hi : i ≤ n), pre_Cantor_set_Icc (i+1) := by
