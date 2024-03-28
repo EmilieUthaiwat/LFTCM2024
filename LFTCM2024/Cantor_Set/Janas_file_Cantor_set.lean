@@ -139,6 +139,14 @@ lemma Is_TotallyDisconnected_Cantor : IsTotallyDisconnected Cantor_set := by
         apply hz.2.2
 
 
+lemma obvious_inclusion : Cantor_set ⊆ Set.Icc 0 1 := by
+  intro x
+  unfold Cantor_set
+  intro h
+  simp only [Set.iInf_eq_iInter, Set.mem_iInter] at h
+  exact h 0
+
+
 lemma Is_TotallyDisconnected_Cantor_attempt2 : IsTotallyDisconnected Cantor_set := by
   intro S hS h₁S x h₁x y h₁y
   by_contra nhxy
@@ -155,7 +163,65 @@ lemma Is_TotallyDisconnected_Cantor_attempt2 : IsTotallyDisconnected Cantor_set 
         apply nhxy
         rfl
       · norm_num
-    have hxy : |y - x| < 1 := by sorry
+    have hxy : |y - x| < 1 := by
+      have hx : 0 ≤ x ∧ x ≤ 1 := by
+        have h : x ∈ Cantor_set := by apply hS; exact h₁x
+        apply obvious_inclusion at h
+        simp at h
+        exact h
+
+      have hy : 0 ≤ y ∧ y ≤ 1 := by
+        have h : y ∈ Cantor_set := by apply hS; exact h₁y
+        apply obvious_inclusion at h
+        simp at h
+        exact h
+
+      rw [abs_sub_lt_iff]
+
+      have ineq : -1 ≤ x - y ∧ x - y ≤ 1 := ⟨ by linarith, by linarith ⟩
+
+      have abs_ineq : |x-y| ≤ 1 := by 
+        rw [abs_le]
+        exact ineq
+
+      have abs_neq : |x-y| ≠ 1 := by
+        intro h
+        let A := Set.Iio (1/2 : ℝ)
+        let B := Set.Ioi (1/2 : ℝ)
+
+        have hz : 1/2 ∉ Cantor_set := by 
+          sorry
+
+        have S_sue_AB : S ⊆ A ∪ B := by
+          rw [Set.subset_def]
+          intro u hu
+          have t : u ≠ 1/2 := by
+            intro as
+            subst u
+            apply hS at hu
+            exact hz hu
+
+          rw [@Set.mem_union]
+          rw [@Set.mem_Iio, @Set.mem_Ioi]
+          norm_num
+          use t
+
+        have int_not_empty : ¬ Set.Nonempty (S ∩ (A ∩ B)) := by
+          refine Set.not_nonempty_iff_eq_empty.mpr ?_
+          rw [@Set.Iio_inter_Ioi]
+          simp only [gt_iff_lt, lt_self_iff_false, not_false_eq_true, Set.Ioo_eq_empty, Set.inter_empty]
+
+        apply int_not_empty
+
+        apply h₁S
+        · apply isOpen_Iio
+        · apply isOpen_Ioi
+        · exact S_sue_AB
+        · sorry
+        · sorry
+
+      sorry
+
     obtain ⟨N, hN⟩ := hd
     obtain ⟨z, hz⟩ : ∃ z : ℝ, z ∉ Cantor_set ∧ x < z ∧ z < y := by
      use x+1/(2*3^N)
@@ -179,8 +245,24 @@ lemma Is_TotallyDisconnected_Cantor_attempt2 : IsTotallyDisconnected Cantor_set 
             sorry
           · sorry
      · constructor
-       ·sorry
-       ·sorry
+       · simp only [one_div, mul_inv_rev, lt_add_iff_pos_right, gt_iff_lt, inv_pos, Nat.ofNat_pos,
+         pow_pos, mul_pos_iff_of_pos_left]
+       · ring_nf
+         ring_nf at hN
+         have hTemporary : x + |y - x| * (1 / 2) < y := by
+          have hModule : |y - x| = y - x := by
+            simp only [abs_eq_self, sub_nonneg]
+            exact le_of_lt xsmallery
+          rw [hModule]
+          linarith
+         have hTemporary2 : x + (1 / 3) ^ N * (1 / 2) < x + |y - x| * (1 / 2) := by
+          simp only [one_div, inv_pow, add_lt_add_iff_left, gt_iff_lt, inv_pos, Nat.ofNat_pos,
+            mul_lt_mul_right]
+          rw [@one_div] at hN
+          simp only [inv_pow] at hN
+          assumption
+         apply lt_trans hTemporary2
+         assumption
     -- use z= x + 1/2*3^N
     set A := Set.Iio z
     set B := Set.Ioi z

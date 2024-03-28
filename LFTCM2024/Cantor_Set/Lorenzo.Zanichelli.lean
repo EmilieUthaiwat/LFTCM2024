@@ -1,6 +1,5 @@
 import LFTCM2024.Cantor_Set.Cantor_Team_3
 import LFTCM2024.Cantor_Set.Cantor_Set_Team_1
-
 -- --lemma Cantor_set_preperfect : Preperfect Cantor_set := by --no isolated points
 --   intro x
 --   intro hx
@@ -37,8 +36,18 @@ import LFTCM2024.Cantor_Set.Cantor_Set_Team_1
 -- lemma Ceil_minus_one (x : ℝ) : |⌈x⌉ - x| < 1 := by
 --   have h : _ := Ceil_minus_one_aux (- x)
 --   simpa using h
-lemma foo (hx : x ∈  Cantor_set) (n :ℕ) (hnice : ∀ a<n, x≠ (a:ℝ)/3^n) :
-∀m<n, (((Nat.floor (x*3^n))/3^n):ℝ)∈ Set.Icc (((Nat.floor (x*3^m))/3^m):ℝ) (((Nat.floor (x*3^m))/3^m):ℝ) := by
+lemma cipher (m n b : ℕ )(hb: b>1) (hm : n≤m) : ∀x:ℝ, (Nat.ceil (x*(b^m)))/(b^m)∈
+Set.Icc ((Nat.ceil (x*b^n))/(b^n)) ((Nat.ceil (x*b^n)+1)/(b^m)) := by
+simp
+sorry
+
+lemma foo (hx : x ∈  Cantor_set) (n m :ℕ) (hm: m<n)(hnice : ∀ a<n, x≠ (a:ℝ)/3^n) :
+(((Nat.floor (x*3^n))/3^n):ℝ)∈ Set.Icc (((Nat.floor (x*3^m))/3^m):ℝ) ((((Nat.floor (x*3^m))+1)/3^m):ℝ) := by
+apply cipher
+sorry
+
+lemma bar (hx : x ∈  Cantor_set) (Cantor_set_metrizable :ℕ) (hnice : ∀ a<n, x≠ (a:ℝ)/3^n) :
+Set.Icc (((Nat.floor (x*3^m))/3^m):ℝ) (((Nat.floor (x*3^m)+1)/3^m):ℝ)⊆ pre_Cantor_set_Icc m := by
 sorry
 
 lemma extremuses_of_Cantor_set_nice_x  (hx : x ∈  Cantor_set) (n :ℕ) (hnice : ∀ a<n, x≠ (a:ℝ)/3^n) :
@@ -46,12 +55,16 @@ lemma extremuses_of_Cantor_set_nice_x  (hx : x ∈  Cantor_set) (n :ℕ) (hnice 
 by
 suffices h1:  ∀ m :ℕ,  ((((Nat.floor (x*3^n))/3^n):ℝ)∈ pre_Cantor_set_Icc m) from by
   sorry
-by_cases hm : m≥ n
-·
-  sorry
+intro m
+by_cases hm : m ≥ n
 · sorry
-sorry
-
+· push_neg at hm
+  suffices (((Nat.floor (x*3^n))/3^n):ℝ)∈ Set.Icc (((Nat.floor (x*3^m))/3^m):ℝ) (((Nat.floor (x*3^m))/3^m):ℝ) from
+    sorry
+  apply foo
+  assumption
+  assumption
+  assumption
 noncomputable
 def function_extremuses_Cantor_set(n:ℕ):  Cantor_set → Cantor_set :=
   fun x =>
@@ -101,7 +114,7 @@ lemma LZCantor_set_preperfect : Preperfect Cantor_set := by
   have hnε : 3^(-(n:ℤ))<ε := by
           simp
           sorry  --calculations....
-  set y : ℝ := ((Nat.ceil (x*3^n))/3^n) with hy1
+  set y : ℝ := ((Nat.floor (x*3^n))/3^n) with hy1
   by_cases hy : y≠ x
   · have : y∈ U∩ Cantor_set := by
       constructor
@@ -128,49 +141,3 @@ lemma LZCantor_set_preperfect : Preperfect Cantor_set := by
       rw[hy.symm]
       sorry
     use z
-
-lemma Cantor_set_tot_disc' : TotallyDisconnectedSpace Cantor_set := by
-  apply (totallyDisconnectedSpace_iff Cantor_set).2
-  intro S hS h₁S x h₁x y h₁y
-  by_contra nhxy
-  unfold IsPreconnected at h₁S
-  have h : x < y ∨ x = y ∨ y < x := by
-    exact lt_trichotomy x y
-  rcases (lt_trichotomy x y) with xsmallery | ysmallerx
-  · have hN : ∃ N : ℕ, N > 0 ∧ 1/ (3^N) < |(y:ℝ) - (x:ℝ)| := by sorry
-    obtain ⟨z, hz⟩ : ∃ z : ℝ, z ∉ Cantor_set ∧ x < z ∧ z < y := by sorry
-    -- use z= x + 1/2*3^N
-    set A : Set Cantor_set := {x | (x: ℝ) ∈ Set.Ioo -1 z}
-    set B : Set Cantor_set := {x | (x: ℝ) ∈ Set.Ioo z 2}
-    have hfinal_1 : IsOpen A ∧ IsOpen B ∧ Cantor_set ⊆ A ∪ B ∧ Set.Nonempty (Cantor_set ∩ A) ∧
-       Set.Nonempty (Cantor_set ∩ B) := by
-        refine ⟨?_,?_,?_,?_⟩
-        · exact?
-          sorry
-        · sorry
-        ·
-          sorry
-        · constructor
-          · use x
-            constructor
-            · exact Subtype.coe_prop x
-            · refine Set.mem_image_of_mem Subtype.val ?h.right.h
-
-              exact hz.2.1
-          · use y
-          sorry
-    have bla : ¬ Set.Nonempty (S ∩ (A ∩ B)) := by
-      suffices
-       sorry
-    apply bla
-    apply h₁S
-    · sorry
-    · sorry
-    · sorry
-    · sorry
-    · sorry
-  · rcases ysmallerx with h1 | h2
-    · apply nhxy
-      assumption
-    · sorry
-  sorry
