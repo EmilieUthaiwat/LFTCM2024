@@ -60,20 +60,20 @@ lemma bla: IsCompact (Set.Icc 0 1 : Set ℝ) :=
 --IsCompact.{u_1} {X : Type u_1} [inst✝ : TopologicalSpace X] (s : Set X) : Prop
 
 
-lemma Cantor_set_closed' : IsClosed Cantor_set  := by
-  have h : ∀ n, IsClosed (pre_Cantor_set n) := by
-    intro n
-    induction n with
-    | zero =>
-      exact isClosed_Icc
-    | succ n ih =>
-      refine IsClosed.union ?_ ?_
-      · refine (ClosedEmbedding.closed_iff_image_closed ?succ.refine_1.hf).mp ih
-        apply Homeomorph.closedEmbedding Homeomorph_T_L
-      · refine (ClosedEmbedding.closed_iff_image_closed ?succ.refine_2.hf).mp ih
-        apply Homeomorph.closedEmbedding Homeomorph_T_R
-  apply isClosed_iInter
-  exact h
+-- lemma Cantor_set_closed' : IsClosed Cantor_set  := by
+--   have h : ∀ n, IsClosed (pre_Cantor_set n) := by
+--     intro n
+--     induction n with
+--     | zero =>
+--       exact isClosed_Icc
+--     | succ n ih =>
+--       refine IsClosed.union ?_ ?_
+--       · refine (ClosedEmbedding.closed_iff_image_closed ?succ.refine_1.hf).mp ih
+--         apply Homeomorph.closedEmbedding Homeomorph_T_L
+--       · refine (ClosedEmbedding.closed_iff_image_closed ?succ.refine_2.hf).mp ih
+--         apply Homeomorph.closedEmbedding Homeomorph_T_R
+--   apply isClosed_iInter
+--   exact h
 
 lemma Is_TotallyDisconnected_Cantor : IsTotallyDisconnected Cantor_set := by
   intro S hS h₁S x h₁x y h₁y
@@ -180,7 +180,7 @@ lemma Is_TotallyDisconnected_Cantor_attempt2 : IsTotallyDisconnected Cantor_set 
 
       have ineq : -1 ≤ x - y ∧ x - y ≤ 1 := ⟨ by linarith, by linarith ⟩
 
-      have abs_ineq : |x-y| ≤ 1 := by 
+      have abs_ineq : |x-y| ≤ 1 := by
         rw [abs_le]
         exact ineq
 
@@ -189,9 +189,24 @@ lemma Is_TotallyDisconnected_Cantor_attempt2 : IsTotallyDisconnected Cantor_set 
         let A := Set.Iio (1/2 : ℝ)
         let B := Set.Ioi (1/2 : ℝ)
 
-        have hz : 1/2 ∉ Cantor_set := by 
-          sorry
-
+        have hz : 1/2 ∉ Cantor_set := by
+          intro hcontra
+          unfold Cantor_set at hcontra
+          simp only [one_div, Set.iInf_eq_iInter, Set.mem_iInter] at hcontra
+          specialize hcontra 1
+          unfold pre_Cantor_set at hcontra
+          unfold T_L at hcontra
+          unfold T_R at hcontra
+          simp only [Set.mem_union, Set.mem_image] at hcontra
+          rcases hcontra with hcontra | hcontra
+          · rcases hcontra with ⟨z, hcontra⟩
+            unfold pre_Cantor_set at hcontra
+            simp only [Set.mem_Icc] at hcontra
+            nlinarith
+          · rcases hcontra with ⟨z, hcontra⟩
+            unfold pre_Cantor_set at hcontra
+            simp only [Set.mem_Icc] at hcontra
+            nlinarith
         have S_sue_AB : S ⊆ A ∪ B := by
           rw [Set.subset_def]
           intro u hu
@@ -219,8 +234,22 @@ lemma Is_TotallyDisconnected_Cantor_attempt2 : IsTotallyDisconnected Cantor_set 
         · exact S_sue_AB
         · sorry
         · sorry
-
-      sorry
+      rcases ineq with ⟨hlem1, hle1⟩
+      constructor
+      · have hylex : y - x ≠ 1 := by
+          intro hcontra
+          apply abs_neq
+          rw [@abs_sub_comm]
+          rw [hcontra]
+          norm_num
+        --here linarith doesn't work, but after multiplying hlem1 by -1 it should work
+        sorry
+      · have hxley : x - y ≠ 1 := by
+          intro hcontra
+          apply abs_neq
+          rw [hcontra]
+          norm_num
+        linarith
 
     obtain ⟨N, hN⟩ := hd
     obtain ⟨z, hz⟩ : ∃ z : ℝ, z ∉ Cantor_set ∧ x < z ∧ z < y := by
