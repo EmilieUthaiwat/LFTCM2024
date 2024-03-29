@@ -1,4 +1,4 @@
-import Mathlib.Tactic.Linarith
+import Mathlib.Tactic
 import Mathlib.Topology.Metrizable.Basic
 import Mathlib.Topology.Connected.TotallyDisconnected
 import Mathlib.Analysis.SpecialFunctions.Log.Base
