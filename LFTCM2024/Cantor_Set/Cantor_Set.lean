@@ -33,16 +33,14 @@ def Cantor_set := iInf pre_Cantor_set
 
 /- Guys, please don't add the second definition here. It is giving errors in the team 1 file as we have to import this one anyway-/
 
--- def pre_Cantor_set_Icc (n : ℕ) := ⋃ (k : ℕ) (_ : k ≤ 3^(n-1)-1), pre_pre_Cantor_set_Icc n k
+def pre_pre_Cantor_set_Icc (n k : ℕ) : Set ℝ :=
+  Set.Icc ((3*k)/3^n) ((3*k+1)/3^n) ∪ Set.Icc ((3*k+2)/3^n) ((3*k+3)/3^n)
 
 
-/- The function g takes entries from [1,∞) -/
--- def g (i : ℕ) (_ : 1 ≤ i) : Set ℝ := pre_Cantor_set_Icc i
+def pre_Cantor_set_Icc (n : ℕ) := ⋃ (k : ℕ) (_ : k ≤ 3^(n-1)-1), pre_pre_Cantor_set_Icc n k
 
--- def Cantor_set_Icc := ⋂ (i : ℕ) (hi : 1 ≤ i), g i hi
 
--- def Cantor_set_Icc := ⋂ (i : ℕ) (_ : 1 ≤ i), pre_Cantor_set_Icc i
-
+def Cantor_set_Icc := ⋂ (i : ℕ), pre_Cantor_set_Icc i
 
 -- def h (n : ℕ) (i : ℕ) (_ : i ≤ n) : Set ℝ := pre_Cantor_set_Icc i
 
@@ -214,6 +212,7 @@ by_cases hm : m ≥ n
     exact this
   apply foo <;> assumption
 
+#exit
 
 lemma LZCantor_set_preperfect : Preperfect Cantor_set := by
 rw [preperfect_iff_nhds]
