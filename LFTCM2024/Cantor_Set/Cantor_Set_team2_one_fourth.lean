@@ -6,7 +6,7 @@ import LFTCM2024.Cantor_Set.Cantor_Team_3
 
 -- proofs of 0, 1/4 (and 3/4) are in the triadic Cantor
 
-lemma quarters_everywhere : ∀ n : ℕ, 1/4 ∈ pre_Cantor_set n ∧ 3/4 ∈ pre_Cantor_set n := by
+lemma quarters_everywhere' : ∀ n : ℕ, 1/4 ∈ pre_Cantor_set n ∧ 3/4 ∈ pre_Cantor_set n := by
   intro n
   induction n with
   | zero =>

@@ -7,7 +7,7 @@ import Mathlib.Topology.Perfect
 import Mathlib.Analysis.Calculus.ContDiff.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Base
 
-noncomputable def Homeomorph_T_L : Homeomorph ℝ ℝ where
+noncomputable def Homeomorph_T_L' : Homeomorph ℝ ℝ where
   toFun := T_L
   invFun := fun x ↦ 3*x
   left_inv := by
@@ -27,7 +27,7 @@ noncomputable def Homeomorph_T_L : Homeomorph ℝ ℝ where
   continuous_invFun := by
     continuity
 
-noncomputable def Homeomorph_T_R : Homeomorph ℝ ℝ where
+noncomputable def Homeomorph_T_R' : Homeomorph ℝ ℝ where
   toFun := T_R
   invFun := fun x ↦ 3*x - 2
   left_inv := by
@@ -47,10 +47,10 @@ noncomputable def Homeomorph_T_R : Homeomorph ℝ ℝ where
   continuous_invFun := by
     continuity
 
-instance Cantor_set.metricSpace : MetricSpace Cantor_set :=
+instance Cantor_set.metricSpace' : MetricSpace Cantor_set :=
   Subtype.metricSpace
 
-lemma Cantor_set_closed : IsClosed Cantor_set  := by
+lemma Cantor_set_closed' : IsClosed Cantor_set  := by
   have h : ∀ n, IsClosed (pre_Cantor_set n) := by
     intro n
     induction n with
@@ -59,14 +59,14 @@ lemma Cantor_set_closed : IsClosed Cantor_set  := by
     | succ n ih =>
       refine IsClosed.union ?_ ?_
       · refine (ClosedEmbedding.closed_iff_image_closed ?succ.refine_1.hf).mp ih
-        apply Homeomorph.closedEmbedding Homeomorph_T_L
+        apply Homeomorph.closedEmbedding Homeomorph_T_L'
       · refine (ClosedEmbedding.closed_iff_image_closed ?succ.refine_2.hf).mp ih
-        apply Homeomorph.closedEmbedding Homeomorph_T_R
+        apply Homeomorph.closedEmbedding Homeomorph_T_R'
   apply isClosed_iInter
   exact h
 
 
-lemma Cantor_set_compact : IsCompact Cantor_set := by
+lemma Cantor_set_compact' : IsCompact Cantor_set := by
   have : Cantor_set ⊆ Set.Icc 0 1 := by
     unfold Cantor_set
     intro x hx
@@ -78,10 +78,10 @@ lemma Cantor_set_compact : IsCompact Cantor_set := by
 
 --the following two lemmas are totally obvious
 
-lemma Cantor_set_T2 : T2Space Cantor_set := by
+lemma Cantor_set_T2' : T2Space Cantor_set := by
   --exact instT2SpaceSubtypeInstTopologicalSpaceSubtype
   infer_instance
-lemma Cantor_set_metrizable : TopologicalSpace.MetrizableSpace Cantor_set:= by
+lemma Cantor_set_metrizable' : TopologicalSpace.MetrizableSpace Cantor_set:= by
   infer_instance
 
 
