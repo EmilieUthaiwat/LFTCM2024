@@ -6,35 +6,89 @@ import LFTCM2024.Cantor_Set.Cantor_Set_Team_1
 --  Subtype.metricSpace
 
 
+lemma obvious_inclusion : Cantor_set ⊆ Set.Icc 0 1 := by
+  intro x
+  unfold Cantor_set
+  intro h
+  simp only [Set.iInf_eq_iInter, Set.mem_iInter] at h
+  exact h 0
+
+----------------------------
+
+--- from Tomas' file : tryadic development
+
+lemma map_to_product (x : ℝ) : (ℕ → Bool) := by
+  intro n
+  let p := x ∈ T_L '' pre_Cantor_set n
+
+  classical
+  -- let d : Decidable p := by
+  --   by_cases c : p   -- use excluded middle on p
+  --   · exact isTrue c
+  --   · exact isFalse c
+  exact decide p
+
+lemma map_from_product_one (f : ℕ → Bool) (n : ℕ) : pre_Cantor_set n := by
+  induction n with
+  | zero =>
+    unfold pre_Cantor_set
+    use 1/2
+    norm_num
+  | succ n2 ih  =>
+    let ⟨el, prf⟩ := ih
+    if f n2
+      then use T_L el
+           unfold pre_Cantor_set
+           rw [Set.mem_union]
+           left
+           simp only [Set.mem_image]
+           use el
+      else use T_R el
+           unfold pre_Cantor_set
+           rw [Set.mem_union]
+           right
+           simp only [Set.mem_image]
+           use el
+
+
+--- not isolated points via tryadic development
+
+lemma Cantor_set_preperfect_tryadic_proof : Preperfect Cantor_set := by
+  rw [preperfect_iff_nhds]
+  intro x h U hU
+  rw [ Metric.mem_nhds_iff] at hU
+  obtain ⟨ ε , epos, hball ⟩ := hU
+  unfold Metric.ball at hball
+  let n := Nat.ceil (Real.logb 3 ε )+1
+  have He : 1/3^n < ε := by sorry --calcul log
+  have non_0 : n≠ 0 := by simp
+
+  sorry
+
+
+--- Lorenzo
+
 lemma foo (hx : x ∈  Cantor_set) (n :ℕ) (hnice : ∀ a<n, x≠ (a:ℝ)/3^n) :
 ∀m<n, (((Nat.floor (x*3^n))/3^n):ℝ)∈ Set.Icc (((Nat.floor (x*3^m))/3^m):ℝ) (((Nat.floor (x*3^m))/3^m):ℝ) := by
 sorry
 
 lemma extremuses_of_Cantor_set_nice_x  (hx : x ∈  Cantor_set) (n :ℕ) (hnice : ∀ a<n, x≠ (a:ℝ)/3^n) :
-(((Nat.floor (x*3^n))/3^n):ℝ)∈ Cantor_set :=--∧ (((Nat.ceil (x.1*3^n))/3^n):ℝ) ∈ Cantor_set :=
-by
-suffices h1:  ∀ m :ℕ,  ((((Nat.floor (x*3^n))/3^n):ℝ)∈ pre_Cantor_set_Icc m) from by
-  sorry
-intro m
-by_cases hm : m≥  n
-· unfold pre_Cantor_set_Icc
-  simp_rw [Cantor_set, pre_Cantor_set] at hx
+(((Nat.floor (x*3^n))/3^n):ℝ)∈ Cantor_set :=- by
+  suffices h1:  ∀ m :ℕ,  ((((Nat.floor (x*3^n))/3^n):ℝ)∈ pre_Cantor_set_Icc m) from by
+    sorry
+  intro m
+  by_cases hm : m≥  n
+  · unfold pre_Cantor_set_Icc
+    simp_rw [Cantor_set, pre_Cantor_set] at hx
   rw  [Set.mem_iUnion]
   set k := Nat.floor (x*3^(n+1)) with k_def
   simp_rw [Set.mem_iUnion]
   -- simp [pre_pre_Cantor_set_Icc​]
 
   use 3^(m-n)*k
-
-
-  refine ⟨ ?_, ?_⟩
-  refine hm
-
-
-
   sorry
-· sorry
-sorry
+  · sorry
+  sorry
 
 
 
