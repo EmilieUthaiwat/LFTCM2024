@@ -35,7 +35,7 @@ def prePreCantorSetIcc (n k : ℕ) : Set ℝ :=
 
 def preCantorSetIcc (n : ℕ) := ⋃ (k : ℕ) (_ : k ≤ 3^(n-1)-1), prePreCantorSetIcc n k
 
-def cantorSetIcc := ⋂ (i : ℕ) (_ : 1 ≤ i), preCantorSetIcc i
+def cantorSetIcc := ⋂ (i : ℕ), preCantorSetIcc i
 
 def h (n : ℕ) (i : ℕ) (_ : i ≤ n) : Set ℝ := preCantorSetIcc i
 
