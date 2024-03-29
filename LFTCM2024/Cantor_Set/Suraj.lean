@@ -14,27 +14,6 @@ def pre_Cantor_set : ℕ → Set ℝ
 def Cantor_set := iInf pre_Cantor_set
 
 
-lemma zero_in_cantor : 0 ∈ Cantor_set := by
- unfold Cantor_set
- simp
- intro i
- induction i with
- | zero =>
-   unfold pre_Cantor_set
-   simp
-
- | succ n ih =>
-   unfold pre_Cantor_set
-   left
-   simp
-   use 0
-   constructor
-   assumption
-   unfold T_L
-   exact zero_div 3
-
-
-
 /- Function which takes n and k as input and gives the union of two closed intervals as output-/
 def pre_pre_Cantor_set_Icc (n k : ℕ) : Set ℝ :=
   Set.Icc ((3*k)/3^n) ((3*k+1)/3^n) ∪ Set.Icc ((3*k+2)/3^n) ((3*k+3)/3^n)
