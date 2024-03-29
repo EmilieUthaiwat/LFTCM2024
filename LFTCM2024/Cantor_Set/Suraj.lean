@@ -88,7 +88,7 @@ theorem inter_Cantor_set_Union_Icc_eq_pre_Cantor_set (n : ℕ) :
   pre_Cantor_set (n+1) = ⋂ (i : ℕ) (hi : i ≤ n), pre_Cantor_set_Icc (i+1) := by
   induction n with
   | zero =>
-    simp
+    simp only [Nat.zero_eq, zero_add, nonpos_iff_eq_zero, Set.iInter_iInter_eq_left]
     rw[pre_Cantor_set, pre_Cantor_set_Icc]
     simp only [ge_iff_le, le_refl, tsub_eq_zero_of_le, pow_zero, nonpos_iff_eq_zero,
       Set.iUnion_iUnion_eq_left]
@@ -99,7 +99,7 @@ theorem inter_Cantor_set_Union_Icc_eq_pre_Cantor_set (n : ℕ) :
       sorry
     have h2 :  T_R '' Set.Icc 0 1 = Set.Icc (2/3) 1 := by
       sorry
-    simp [h1, h2]
+    rw [h1, one_div, h2]
   | succ n ih =>
 
     sorry
@@ -115,12 +115,17 @@ theorem inter_Cantor_set_Union_Icc_eq_pre_Cantor_set (n : ℕ) :
 
 theorem Cantor_set_eq_Icc : Cantor_set = Cantor_set_Icc := by
   unfold Cantor_set Cantor_set_Icc
-  rw [Set.iInf_eq_iInter]
-  have h : ⋂ i, pre_Cantor_set_Icc i = ⋂ (i : ℕ) ( (j: ℕ) ∩ j (hj : j ≤ i), pre_Cantor_set_Icc (j+1)) := by
+  have h1 : ⋂ n, pre_Cantor_set_Icc n = ⋂ (n : ℕ) , pre_Cantor_set_Icc (n+1) ∩ pre_Cantor_set_Icc 0 := by
    sorry
-  rw [h]
-
-
-  sorry
--- This proof is by using the fact that Cantor_set_Icc = ⋂ (n : ℕ) Cantor_set_union_Icc n
--- We have ⋂ (n : ℕ) Cantor_set_union_Icc n = Cantor_set_union_Icc 0 ∩ ⋂ (n : ℕ) Cantor_set_union_Icc (n+1)
+  have h2 : ⋂ (n : ℕ) , pre_Cantor_set_Icc (n+1) =
+    ⋂ (n : ℕ) , (⋂ (i : ℕ) (hi : i ≤ n), pre_Cantor_set_Icc (i+1)) := by sorry
+  simp_rw [← inter_Cantor_set_Union_Icc_eq_pre_Cantor_set] at h2
+  rw [h1]
+  have h3: ⋂ n, pre_Cantor_set_Icc (n + 1) ∩ pre_Cantor_set_Icc 0 =
+    pre_Cantor_set_Icc 0 ∩ ⋂ n, pre_Cantor_set_Icc (n + 1) := by sorry
+  rw [h3, h2]
+  have h4: pre_Cantor_set_Icc 0 = pre_Cantor_set 0 ∪ Set.Icc 2 3 := by sorry
+  have h5: (pre_Cantor_set 0 ∪ Set.Icc 2 3) ∩ ⋂ n, pre_Cantor_set (n + 1) =
+    ⋂ n, pre_Cantor_set n := by sorry
+  rw [h4, h5]
+  simp
