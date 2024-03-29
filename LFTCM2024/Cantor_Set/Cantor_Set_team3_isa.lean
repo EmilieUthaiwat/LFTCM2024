@@ -6,6 +6,7 @@ import LFTCM2024.Cantor_Set.Cantor_Set_Team_1
 --  Subtype.metricSpace
 
 
+
 lemma obvious_inclusion : Cantor_set ⊆ Set.Icc 0 1 := by
   intro x
   unfold Cantor_set
@@ -28,6 +29,8 @@ lemma map_to_product (x : ℝ) : (ℕ → Bool) := by
   --   · exact isFalse c
   exact decide p
 
+#check map_to_product
+
 lemma map_from_product_one (f : ℕ → Bool) (n : ℕ) : pre_Cantor_set n := by
   induction n with
   | zero =>
@@ -49,6 +52,24 @@ lemma map_from_product_one (f : ℕ → Bool) (n : ℕ) : pre_Cantor_set n := by
            right
            simp only [Set.mem_image]
            use el
+
+
+
+noncomputable def dev : Cantor_set →  (ℕ → ℕ ) := by
+  intro x n
+  if map_to_product x n then exact 0
+  else exact 2
+
+noncomputable def dev_bool :  (ℕ → ℕ ) → (ℕ → Bool) := by
+  intro a n
+  if (a n =0) then exact true
+  else exact false
+
+noncomputable def inv_dev :  (ℕ → ℕ ) → ℝ  := by
+  intro a
+
+  if map_to_product x n then exact 0
+  else exact 2
 
 
 --- not isolated points via tryadic development
