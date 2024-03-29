@@ -9,7 +9,7 @@ def pre_pre_Cantor_set_Icc (n k : ℕ) : Set ℝ :=
 def pre_Cantor_set_Icc (n : ℕ) := ⋃ (k : ℕ) (_ : k ≤ 3^(n-1)-1), pre_pre_Cantor_set_Icc n k
 
 
-def Cantor_set_Icc := ⋂ (i : ℕ) (_ : 1 ≤ i), pre_Cantor_set_Icc i
+def Cantor_set_Icc := ⋂ (i : ℕ), pre_Cantor_set_Icc i
 
 
 lemma T_L_image_eq_inter {n : ℕ} (hn : 1 ≤ n) :
@@ -61,8 +61,8 @@ theorem pre_Cantor_eq_Inter_pre_Cantor_Icc (n : ℕ) :
     dsimp
     have bij1 : Function.Bijective T_L := sorry
     have bij2 : Function.Bijective T_R := sorry
-    simp_rw [ih, Set.image_iInter₂ bij1, Set.image_iInter₂ bij2, Set.union_iInter, Set.iInter_union,
-      T_L_union_T_R_eq_inter (show (1 : ℕ) ≤ _ + 1 by norm_num)]
+    -- simp_rw [ih, Set.image_iInter₂ bij1, Set.image_iInter₂ bij2, Set.union_iInter, Set.iInter_union,
+      -- T_L_union_T_R_eq_inter (show (1 : ℕ) ≤ _ + 1 by norm_num)]
 
     sorry
   -- The proof follows these steps:
