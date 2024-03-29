@@ -54,7 +54,7 @@ lemma quarters_everywhere' : ∀ n : ℕ, 1/4 ∈ pre_Cantor_set n ∧ 3/4 ∈ p
       · unfold T_R
         linarith
 
-lemma one_quarters_everywhere : ∀ n : ℕ, 1/4 ∈ pre_Cantor_set n := by
+lemma one_quarters_everywhere' : ∀ n : ℕ, 1/4 ∈ pre_Cantor_set n := by
   intro n
   exact (quarters_everywhere n).1
 
@@ -65,7 +65,7 @@ theorem quarters_is_in : 1/4 ∈ Cantor_set := by
   simp only [Set.sInf_eq_sInter, Set.sInter_range, Set.mem_iInter]
   exact one_quarters_everywhere
 
-lemma zero_is_everywhere : ∀ n : ℕ, 0 ∈ pre_Cantor_set n := by
+lemma zero_is_everywhere' : ∀ n : ℕ, 0 ∈ pre_Cantor_set n := by
   intro n
   induction n with
   | zero =>
@@ -85,7 +85,7 @@ lemma zero_is_everywhere : ∀ n : ℕ, 0 ∈ pre_Cantor_set n := by
     · unfold T_L
       simp
 
-theorem zero_is_in : 0 ∈ Cantor_set := by
+theorem zero_is_in' : 0 ∈ Cantor_set := by
   unfold Cantor_set
   unfold iInf
 

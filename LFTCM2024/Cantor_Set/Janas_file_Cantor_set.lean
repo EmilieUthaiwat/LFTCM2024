@@ -60,7 +60,7 @@ lemma bla: IsCompact (Set.Icc 0 1 : Set ℝ) :=
 --IsCompact.{u_1} {X : Type u_1} [inst✝ : TopologicalSpace X] (s : Set X) : Prop
 
 
-lemma Cantor_set_closed' : IsClosed Cantor_set  := by
+lemma Cantor_set_closed'' : IsClosed Cantor_set  := by
   have h : ∀ n, IsClosed (pre_Cantor_set n) := by
     intro n
     induction n with
@@ -69,9 +69,9 @@ lemma Cantor_set_closed' : IsClosed Cantor_set  := by
     | succ n ih =>
       refine IsClosed.union ?_ ?_
       · refine (ClosedEmbedding.closed_iff_image_closed ?succ.refine_1.hf).mp ih
-        apply Homeomorph.closedEmbedding Homeomorph_T_L
+        apply Homeomorph.closedEmbedding Homeomorph_T_L'
       · refine (ClosedEmbedding.closed_iff_image_closed ?succ.refine_2.hf).mp ih
-        apply Homeomorph.closedEmbedding Homeomorph_T_R
+        apply Homeomorph.closedEmbedding Homeomorph_T_R'
   apply isClosed_iInter
   exact h
 
@@ -180,7 +180,7 @@ lemma Is_TotallyDisconnected_Cantor_attempt2 : IsTotallyDisconnected Cantor_set 
 
       have ineq : -1 ≤ x - y ∧ x - y ≤ 1 := ⟨ by linarith, by linarith ⟩
 
-      have abs_ineq : |x-y| ≤ 1 := by 
+      have abs_ineq : |x-y| ≤ 1 := by
         rw [abs_le]
         exact ineq
 
@@ -189,7 +189,7 @@ lemma Is_TotallyDisconnected_Cantor_attempt2 : IsTotallyDisconnected Cantor_set 
         let A := Set.Iio (1/2 : ℝ)
         let B := Set.Ioi (1/2 : ℝ)
 
-        have hz : 1/2 ∉ Cantor_set := by 
+        have hz : 1/2 ∉ Cantor_set := by
           sorry
 
         have S_sue_AB : S ⊆ A ∪ B := by
@@ -336,7 +336,8 @@ lemma Is_TotallyDisconnected_Cantor_attempt2 : IsTotallyDisconnected Cantor_set 
         apply h₁x
         apply hz.2.2
 
-/--lemma Cantor_set_tot_disc' : TotallyDisconnectedSpace Cantor_set := by
+
+/-lemma Cantor_set_tot_disc' : TotallyDisconnectedSpace Cantor_set := by
   apply (totallyDisconnectedSpace_iff Cantor_set).2
   intro S hS h₁S x h₁x y h₁y
   by_contra nhxy
@@ -375,4 +376,4 @@ lemma Is_TotallyDisconnected_Cantor_attempt2 : IsTotallyDisconnected Cantor_set 
   · rcases ysmallerx with h1 | h2
     · apply nhxy
       assumption
-    · sorry --/
+    · sorry -/
