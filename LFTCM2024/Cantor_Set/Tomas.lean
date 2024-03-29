@@ -10,6 +10,29 @@ import LFTCM2024.Cantor_Set.Cantor_Set
 --
 -- def Cantor_set := iInf pre_Cantor_set
 
+
+-- TODO def Cantor_set := ⋂ n, pre_Cantor_set n
+
+@[simps]
+noncomputable def affine_is_hemeo (a b : ℝ) (h : a ≠ 0) : Homeomorph ℝ ℝ where
+  toFun := fun x ↦ a*x + b
+  invFun := fun y ↦ (y-b)/a
+  left_inv := by
+    intro x
+    simp only
+    rw [add_sub_cancel_right]
+    rw [mul_div_cancel_left₀ x h]
+  right_inv := by
+    intro x
+    simp only
+    rw [mul_div_cancel₀ (x - b) h]
+    ring_nf
+  continuous_toFun := by
+    simp only
+    continuity
+  continuous_invFun := by
+    continuity
+
 lemma obvious_inclusion : Cantor_set ⊆ Set.Icc 0 1 := by
   intro x
   unfold Cantor_set
