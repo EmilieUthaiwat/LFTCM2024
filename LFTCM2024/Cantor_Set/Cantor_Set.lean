@@ -22,21 +22,23 @@ def Cantor_set := iInf pre_Cantor_set
 
 
 
-/--
+/-
          First steps towards an equivalence with an alternative definition
          -----------------------------------------------------------------
---/
+-/
 
 /- Function which takes n and k as input and gives the union of two closed intervals as output-/
-def pre_pre_Cantor_set_Icc (n k : ℕ) : Set ℝ :=
-  Set.Icc ((3*k)/3^n) ((3*k+1)/3^n) ∪ Set.Icc ((3*k+2)/3^n) ((3*k+3)/3^n)
+-- def pre_pre_Cantor_set_Icc (n k : ℕ) : Set ℝ :=
+  -- Set.Icc ((3*k)/3^n) ((3*k+1)/3^n) ∪ Set.Icc ((3*k+2)/3^n) ((3*k+3)/3^n)
 
 -- def f (n : ℕ) (k : ℕ) (_ : k ≤ 3^(n-1)-1) : Set ℝ :=
   -- pre_pre_Cantor_set_Icc n k
 
 -- def pre_Cantor_set_Icc (n : ℕ) := ⋃ (k : ℕ) (hk : k ≤ 3^(n-1)-1), f n k hk
 
-def pre_Cantor_set_Icc (n : ℕ) := ⋃ (k : ℕ) (_ : k ≤ 3^(n-1)-1), pre_pre_Cantor_set_Icc n k
+/- Guys, please don't add the second definition here. It is giving errors in the team 1 file as we have to import this one anyway-/
+
+-- def pre_Cantor_set_Icc (n : ℕ) := ⋃ (k : ℕ) (_ : k ≤ 3^(n-1)-1), pre_pre_Cantor_set_Icc n k
 
 
 /- The function g takes entries from [1,∞) -/
@@ -44,20 +46,20 @@ def pre_Cantor_set_Icc (n : ℕ) := ⋃ (k : ℕ) (_ : k ≤ 3^(n-1)-1), pre_pre
 
 -- def Cantor_set_Icc := ⋂ (i : ℕ) (hi : 1 ≤ i), g i hi
 
-def Cantor_set_Icc := ⋂ (i : ℕ) (_ : 1 ≤ i), pre_Cantor_set_Icc i
+-- def Cantor_set_Icc := ⋂ (i : ℕ) (_ : 1 ≤ i), pre_Cantor_set_Icc i
 
 
-def h (n : ℕ) (i : ℕ) (_ : i ≤ n) : Set ℝ := pre_Cantor_set_Icc i
+-- def h (n : ℕ) (i : ℕ) (_ : i ≤ n) : Set ℝ := pre_Cantor_set_Icc i
 
 /-
 C'' n is the intersection of Cantor_set_Union_Icc l for l ≤ n
 -/
-def C'' (n : ℕ) : Set ℝ := ⋂ (i : ℕ) (hi : i ≤ n), h n i hi
+-- def C'' (n : ℕ) : Set ℝ := ⋂ (i : ℕ) (hi : i ≤ n), h n i hi
 
-theorem C''_subset_Cantor_set_Union_Icc
- (n : ℕ) : C'' n ⊆ pre_Cantor_set_Icc n := by
-  refine' Set.iInter₂_subset n _
-  trivial
+-- theorem C''_subset_Cantor_set_Union_Icc
+--  (n : ℕ) : C'' n ⊆ pre_Cantor_set_Icc n := by
+--   refine' Set.iInter₂_subset n _
+--   trivial
 
 
 /--
