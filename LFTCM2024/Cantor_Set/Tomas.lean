@@ -44,13 +44,13 @@ lemma obvious_inclusion : Cantor_set ⊆ Set.Icc 0 1 := by
 
 lemma map_to_product (x : ℝ) : (ℕ → Bool) := by
   intro n
-  let p := T_L x ∈ pre_Cantor_set n
+  let p := x ∈ T_L '' pre_Cantor_set n
 
-  let d : Decidable p := by
-    by_cases c : p   -- use excluded middle on p
-    · exact isTrue c
-    · exact isFalse c
-    -- note: tactic `classical` solves this goal but then exact below fails...
+  classical
+  -- let d : Decidable p := by
+  --   by_cases c : p   -- use excluded middle on p
+  --   · exact isTrue c
+  --   · exact isFalse c
   exact decide p
 
 lemma map_from_product_one (f : ℕ → Bool) (n : ℕ) : pre_Cantor_set n := by
@@ -77,7 +77,7 @@ lemma map_from_product_one (f : ℕ → Bool) (n : ℕ) : pre_Cantor_set n := by
 
 
 -- inspired by https://math.stackexchange.com/questions/253535/the-cantor-ternary-set-is-totally-disconnected
-lemma Cantor_sep_index (x : ℝ) (y : ℝ) : ℕ  := by
+noncomputable def Cantor_sep_index (x : ℝ) (y : ℝ) : ℕ  := by
   -- we know that no later than in n : ℕ, 3^(-n) < |x-y|
   -- then for this n we have that x and y appear in different copies of T_L/T_R image of pre_Cantor_set n
   let a := abs (x-y)
