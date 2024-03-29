@@ -1,15 +1,5 @@
 import LFTCM2024.Cantor_Set.Cantor_Set
--- import Mathlib.Tactic
 
--- /- Function which takes n and k as input and gives the union of two closed intervals as output-/
--- def pre_pre_Cantor_set_Icc (n k : ℕ) : Set ℝ :=
---   Set.Icc ((3*k)/3^n) ((3*k+1)/3^n) ∪ Set.Icc ((3*k+2)/3^n) ((3*k+3)/3^n)
-
-
--- def pre_Cantor_set_Icc (n : ℕ) := ⋃ (k : ℕ) (_ : k ≤ 3^(n-1)-1), pre_pre_Cantor_set_Icc n k
-
-
--- def Cantor_set_Icc := ⋂ (i : ℕ), pre_Cantor_set_Icc i
 
 
 lemma T_L_image_eq_inter {n : ℕ} (hn : 1 ≤ n) :
