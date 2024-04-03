@@ -190,8 +190,27 @@ lemma Is_TotallyDisconnected_Cantor_attempt2 : IsTotallyDisconnected Cantor_set 
         let B := Set.Ioi (1/2 : ℝ)
 
         have hz : 1/2 ∉ Cantor_set := by
+          intro hcontra
+          unfold Cantor_set at hcontra
+          simp only [one_div, Set.iInf_eq_iInter, Set.mem_iInter] at hcontra
+          specialize hcontra 1
+          unfold pre_Cantor_set at hcontra
+          unfold T_L at hcontra
+          unfold T_R at hcontra
+          simp only [Set.mem_union, Set.mem_image] at hcontra
+          rcases hcontra with hcontra | hcontra
+          · rcases hcontra with ⟨z, hcontra⟩
+            unfold pre_Cantor_set at hcontra
+            simp only [Set.mem_Icc] at hcontra
+            nlinarith
+          · rcases hcontra with ⟨z, hcontra⟩
+            unfold pre_Cantor_set at hcontra
+            simp only [Set.mem_Icc] at hcontra
+            nlinarith
+        have hx0y1 : x = 0 ∧ y = 1 := by
+          have hle1 : y - x = 1 := by
+            sorry
           sorry
-
         have S_sue_AB : S ⊆ A ∪ B := by
           rw [Set.subset_def]
           intro u hu
@@ -217,10 +236,34 @@ lemma Is_TotallyDisconnected_Cantor_attempt2 : IsTotallyDisconnected Cantor_set 
         · apply isOpen_Iio
         · apply isOpen_Ioi
         · exact S_sue_AB
-        · sorry
-        · sorry
-
-      sorry
+        · exists x
+          simp only [one_div, Set.mem_inter_iff, Set.mem_Iio, A]
+          constructor
+          · exact h₁x
+          · rw [hx0y1.1]
+            norm_num
+        · exists y
+          simp only [one_div, Set.mem_inter_iff, Set.mem_Ioi, B]
+          constructor
+          · exact h₁y
+          · rw [hx0y1.2]
+            norm_num
+      rcases ineq with ⟨hlem1, hle1⟩
+      constructor
+      · have hylex : y - x ≠ 1 := by
+          intro hcontra
+          apply abs_neq
+          rw [@abs_sub_comm]
+          rw [hcontra]
+          norm_num
+          --here linarith doesn't work, but after multiplying hlem1 by -1 it should work
+        sorry
+      · have hxley : x - y ≠ 1 := by
+          intro hcontra
+          apply abs_neq
+          rw [hcontra]
+          norm_num
+        linarith
 
     obtain ⟨N, hN⟩ := hd
     obtain ⟨z, hz⟩ : ∃ z : ℝ, z ∉ Cantor_set ∧ x < z ∧ z < y := by
