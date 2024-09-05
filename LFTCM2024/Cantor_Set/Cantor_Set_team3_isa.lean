@@ -2,13 +2,13 @@ import LFTCM2024.Cantor_Set.Cantor_Team_3
 import LFTCM2024.Cantor_Set.Cantor_Set
 import Mathlib.Analysis.Normed.Field.Basic
 import Mathlib.Analysis.Normed.Group.InfiniteSum
+import Mathlib.Topology.Instances.ENNReal
+
 
 -- import Mathlib.Topology.MetricSpace.Basic
 
 -- instance Cantor_set.metricSpace : MetricSpace Cantor_set :=
 --  Subtype.metricSpace
-
-
 
 lemma obvious_inclusion : Cantor_set ⊆ Set.Icc 0 1 := by
   intro x
@@ -19,7 +19,7 @@ lemma obvious_inclusion : Cantor_set ⊆ Set.Icc 0 1 := by
 
 ----------------------------
 
---- from Tomas' file : tryadic development
+--- from Tomas' file : triadic development
 
 lemma map_to_product (x : ℝ) : (ℕ → Bool) := by
   intro n
@@ -33,11 +33,48 @@ lemma map_to_product (x : ℝ) : (ℕ → Bool) := by
 
 #check map_to_product
 #check pre_Cantor_set
+------------------------------------------
+------------------------------------
+-- some results about  the series ∑(n>= k) (2/3^n)
+-----------------------------------------
+------------------------------------------------
 
 noncomputable def g := fun n:ℕ ↦ ((2/3^n) : ℝ)
+
+lemma gpos : ∀ n, 0 ≤ g n := by
+  intro n
+  unfold g
+  rw [div_nonneg_iff]
+  left
+  simp
+
 noncomputable def g_part (k : ℕ ) : ℕ → ℝ  := fun n:ℕ ↦ (if n≤ k then  0 else g n)
---variable (k : ℕ)
-#check (g_part 0 0)
+
+lemma g_partineq (k : ℕ ) (n: ℕ) : (0 ≤ g_part k n) ∧ (g_part k n ≤ g n) := by
+  unfold g_part
+  aesop
+  apply gpos
+  apply gpos
+
+lemma rec_g_part (k :ℕ ) : g_part (k+1) = fun n:ℕ ↦ (if n= k+1 then  0 else (g_part k) n) := by
+  ext n
+  by_cases H : (n ≤ k+1)
+  . have I1 : g_part (k+1) n = 0 := by
+      unfold g_part
+      simp
+      intro L
+      linarith
+  . have I1 : g_part (k+1) n = g n := by
+      unfold g_part
+      simp
+      intro L
+      linarith
+    have I2 : g_part (k) n = g n := by
+      unfold g_part
+      simp
+      intro L
+      linarith
+    aesop
 
 lemma geo_sum_r (r: ℝ ) (h1 : 0≤ r) (h2 : r<1) :
 Summable  ( fun(n:ℕ) =>r^n  ) ∧ ( tsum ( fun(n:ℕ) =>r^n  ) = (1 - r)⁻¹ ) := by
@@ -51,21 +88,317 @@ Summable  ( fun(n:ℕ) =>r^n  ) ∧ ( tsum ( fun(n:ℕ) =>r^n  ) = (1 - r)⁻¹ 
 
 lemma geo_sum_third :
 (Summable fun (n:ℕ) =>(1/3 : ℝ )^n) ∧ ( tsum ( fun(n:ℕ) =>(1/3 : ℝ )^n  ) = (3 :ℝ )/2 ) := by
-  have H1 : (0 :ℝ)  ≤ 1/3 := by
-    ring_nf
-    simp
-  have H2 :  (1:ℝ )/3 <1 := by
-    rw [@div_lt_one_iff]
-    left
-    simp
+  have H1 : (0 :ℝ)  ≤ 1/3 := by linarith
+  have H2 :  (1:ℝ )/3 <1 := by linarith
   have K : (3/2 : ℝ) = (1 - 1/3)⁻¹ := by ring_nf
   rw [K]
   exact  geo_sum_r (1/3 : ℝ ) H1 H2
 
+lemma geo_sum  : Summable (g) ∧ ( tsum g   = (3 :ℝ )) := by
+  have geo3 : g = fun (n:ℕ) ↦ 2*(1/3 : ℝ )^n := by
+    ext n
+    unfold g
+    ring_nf
+  rw [geo3]
+  and_intros
+  · rw [summable_mul_left_iff (2)]
+    apply geo_sum_third.1
+  · rw [tsum_mul_left, geo_sum_third.2]
+    ring
 
-lemma geo_sum  : Summable (g) := by sorry
-lemma geo_sum_part (k : ℕ ) : Summable (g_part k) := by sorry
-lemma sum_geo_sum_part (k : ℕ ) : tsum (g_part k) = (1/3^k) := by sorry
+-----------------------------------------
+--absent in my library ?? ----
+theorem summable_of_nonneg_of_le {f g : β → ℝ} (hg : ∀ b, 0 ≤ g b) (hgf : ∀ b, g b ≤ f b)
+    (hf : Summable f) : Summable g := by
+  lift f to β → ℝ≥0 using fun b => (hg b).trans (hgf b)
+  lift g to β → ℝ≥0 using hg
+  rw [NNReal.summable_coe] at hf ⊢
+  exact NNReal.summable_of_le (fun b => NNReal.coe_le_coe.1 (hgf b)) hf
+----- to remove when in the library ?
+-----------------------------------
+
+lemma geo_sum_part (k : ℕ ) : Summable (g_part k) := by
+  have H : ∀ n, g_part k n ≤ g n := by
+    intro n
+    exact (g_partineq k n).2
+  have K : ∀ n, 0 ≤ g_part k n  := by
+    intro n
+    exact (g_partineq k n).1
+  exact (summable_of_nonneg_of_le K H geo_sum.1)
+
+lemma sum_geo_sum_part (k : ℕ ) : tsum (g_part k) = (1/3^k) := by
+  induction (k :ℕ ) with
+  | zero =>
+    have hh : (2/3^0 :ℝ )=( 2 :ℝ):= by ring_nf
+    have h0 : ∑' (n : ℕ), (g n) = 3 := by apply geo_sum.2
+    have h1 : ∑' (n : ℕ), (g n) = g 0 + ∑' (n : ℕ), if n = 0 then 0 else (g n) :=
+      by apply tsum_eq_add_tsum_ite geo_sum.1 0
+    have h2 : 3 = 2 + ∑' (n : ℕ), if n = 0 then 0 else ((2/3^n) : ℝ) := by
+      rw [h0] at h1
+      unfold g at h1
+      rw [hh] at h1
+      exact h1
+    have K : g_part 0 = fun (n:ℕ) ↦ (if n = 0 then 0 else ((2/3^n) : ℝ)):= by
+      ext n
+      unfold g_part
+      simp
+      unfold g
+      eq_refl
+    rw [K]
+    have h3 : 1 = ∑' (n : ℕ), (if n = 0 then 0 else ((2/3^n) : ℝ)) := by linarith
+    rw [← h3]
+    simp
+  | succ k ih =>
+    have h0 : ∑' (n : ℕ), (g_part k n) = (1/3^k) := by apply ih
+    have h1 : ∑' (n : ℕ), (g_part k (n)) = g_part k (k+1) + ∑' (n : ℕ), if n = (k+1) then 0 else (g_part k n) := by
+      apply tsum_eq_add_tsum_ite (geo_sum_part (k)) (k+1)
+    have K : g_part (k+1) = fun (n:ℕ) ↦ (if n = (k+1) then 0 else (g_part k) n ):= by apply rec_g_part (k)
+    rw [K]
+    rw [h0] at h1
+    have hh : g_part k (k+1) = 2/3^(k+1) := by
+        unfold g_part
+        have hhh : ¬ (k+1 ≤ k ) := by simp
+        simp_rw [hhh]
+        simp
+        unfold g
+        eq_refl
+    rw [hh] at h1
+    have h2 : (1/3^k) - 2/3^(k+1) = ∑' (n : ℕ), if n = (k+1) then 0 else (g_part k n)  := by linarith
+    rw [← h2]
+    ring_nf
+    rw [pow_succ]
+    linarith
+
+----------------------------------------------------------
+-- proving that C = {∑ a_k/3^k, a_k =0 or 2}
+------------------------------------------------------------
+
+-- step 1 - Defining the set D_0 in term of set of sum of series
+
+def isTriadic (b : ℕ → ℕ) : Prop := (∀ n, (b n = 0)∨ (b n = 1) ∨ (b n =2)) ∧ (b 0 =0)
+
+noncomputable def fTriadic  (b : ℕ → ℕ) := fun n:ℕ ↦ (((b n)/3^n) : ℝ)
+
+lemma fTriadic_ineq (b : ℕ → ℕ) :
+isTriadic b → (∀ n, fTriadic b n ≤ g_part 0 n ) ∧(∀ n, 0 ≤ fTriadic b n) := by
+  intro H
+  unfold  fTriadic
+  unfold isTriadic at H
+  and_intros
+  . intro n
+    have K : (b n = 0)∨ (b n = 1) ∨ (b n =2) := by exact H.1 n
+    have L : b 0 = 0 := by exact H.2
+    by_cases J : (n= 0)
+    . unfold g_part
+      simp
+      rw [J, L]
+      simp
+    . have J2 : g_part 0 n = g n := by
+        unfold g_part
+        simp
+        intro k
+        trivial
+      rw [J2]
+      unfold g
+      cases K with
+      | inl K1 =>
+        rw [K1]
+        ring_nf
+        simp
+      | inr K2  =>
+        cases K2 with
+        | inl K3 =>
+          rw [K3]
+          ring_nf
+          simp
+        | inr K4 =>
+          rw [K4]
+          ring_nf
+          simp
+  . intro n
+    have K : (b n = 0)∨ (b n = 1) ∨ (b n =2) := by exact H.1 n
+    cases K with
+  | inl K1 =>
+    rw [K1]
+    ring_nf
+    simp
+  | inr K2  =>
+    cases K2 with
+    | inl K3 =>
+      rw [K3]
+      ring_nf
+      simp
+    | inr K4 =>
+      rw [K4]
+      ring_nf
+      simp
+
+lemma summable_fTriadic (b : ℕ → ℕ) :
+isTriadic b → (Summable (fTriadic b)) := by
+  intros H
+  exact (summable_of_nonneg_of_le  (fTriadic_ineq b H).2 (fTriadic_ineq b H).1 (geo_sum_part 0))
+
+lemma inUnit (b : ℕ → ℕ) :
+isTriadic b →  (tsum (fTriadic b) ∈ Set.Icc 0 1) := by
+  intros H
+  and_intros
+  ·  exact tsum_nonneg (fTriadic_ineq b H).2
+  · have K : ∑' (n : ℕ ), (g_part 0) n =1 := by
+      have K2 : ∑' (n : ℕ ), (g_part 0) n =1/3^0 := by exact sum_geo_sum_part 0
+      have L:  1 = 1/ 3^0 := by ring_nf
+      aesop
+    rw [← K]
+    exact tsum_le_tsum (fTriadic_ineq b H).1 (summable_fTriadic b H) (geo_sum_part 0)
+
+
+def Dinit : Set ℝ :=
+{ x : ℝ | ∃ b : ℕ → ℕ , (isTriadic b) ∧ (x=tsum (fTriadic b))}
+#check Dinit
+example (p q : Nat → Prop) : (∃ x, p x ∧ q x) → ∃ x, q x ∧ p x := by
+  intro h
+  cases h with
+  | intro x hpq =>
+    cases hpq with
+    | intro hp hq =>
+      exists x
+
+--- Step 2 - [0,1] = set of triadic series
+def sub1 : Nat → Nat
+  | 0   => 0
+  | n+1 => n
+#check sub1 0
+
+noncomputable def triadic_partial (x : ℝ  ) : (ℕ → ℕ × ℝ )
+  | 0 => (0,0)
+  | n+1 => (Nat.floor (3^(n+1)*(x-(triadic_partial x n).2)),
+  (triadic_partial x n).2+Nat.floor (3^(n+1)*(x-(triadic_partial x n).2))/3^(n+1))
+
+#check triadic_partial 1 1
+#check (0,0).2
+#check Nat.floor (1 :ℝ)
+
+noncomputable def y (x : ℝ  ) := fun n :ℕ ↦ (triadic_partial x n).2
+noncomputable def b (x : ℝ  ) := fun n :ℕ ↦ (triadic_partial x n).1
+
+lemma prop_yb (x : ℝ ) (n : ℕ) (h : x∈ Set.Icc 0 1):
+ (y x n ≤ x) ∧ (x ≤  y x n + 1/3^n) ∧ (0 ≤ b x n) ∧ ( b x n ≤ 2) := by
+  induction n with
+  | zero =>
+    unfold y b
+    unfold triadic_partial
+    simp
+    simp_rw [←  Set.mem_Icc, h]
+  | succ n ih =>
+     cases' ih with h1 h2
+     cases' h2 with h2 h3
+     cases' h3 with h3 h4
+     have K : y x (Nat.succ n) = y x n + (b x (n+1))/3^(Nat.succ n) := by
+      unfold b y
+      tauto
+
+     have j :  0< 3^(n+1) := by simp
+     have J0 : Nat.floor (3^(n+1)*(x-(triadic_partial x n).2)) ≤ 3^(n+1)*(x - (y x n)) := by
+      apply Nat.floor_le
+      unfold y at h1
+      --have j : 0 ≤ 3^(n+1) := by simp
+      have jj : 0 ≤ x-(triadic_partial x n).2 := by linarith
+      simp
+      linarith
+     have J00 : b x (n+1) ≤ 3^(n+1)*(x - (y x n)) := by exact J0
+     have J1 : b x (n+1) ≤ 3^(n+1)*x - 3^(n+1)*(y x n) := by linarith
+     have J20 : 3^(n+1)*(x - (y x n))<  Nat.floor (3^(n+1)*(x-(triadic_partial x n).2))+1 := by
+        apply Nat.lt_floor_add_one
+     have J200 :  3^(n+1)*(x - (y x n))<  b x (n+1) +1 := by exact J20
+     --have J10 : 3^(n+1)*x - 3^(n+1)*(y x n)≤  b x (n+1) +1  := by linarith
+     have J2 :  3^(n+1)*x - 3^(n+1)*(y x n) ≤ b x (n+1) +1 := by linarith
+     have J3 : 3 ^ (n + 1) * (y x n) + ↑(b x (n + 1)) ≤ 3 ^ (n + 1) * x  := by
+          linarith
+     rw [K]
+     and_intros
+     ·
+       have J32 : (3 ^ (n + 1) * (y x n) + ↑(b x (n + 1)))/3^(n+1) ≤ (3 ^ (n + 1) *  x)/3^(n+1)  := by
+
+         sorry
+       have J4 : (y x n) + ↑(b x (n + 1))/3^(n+1) ≤ x  := by
+
+        sorry
+       exact J4
+
+     ·--linarith
+      sorry
+     ·linarith
+
+     · --linarith
+        sorry
+
+
+
+
+#check Set.mem_Icc
+
+lemma eqDinitUnit : Dinit = Set.Icc 0 1 := by
+  ext x
+  constructor
+  · intro H
+    unfold Dinit at H
+    cases H with
+    | intro b h =>
+      cases h with
+    | intro hp hq =>
+      rw [hq]
+      exact inUnit b hp
+  . intro H
+    unfold Dinit
+    simp
+    --- b to construct b n = floor (bla bla)
+    sorry
+
+
+-- step 3 - Defining the set D_n (=C_n) in term of sets of sum of series
+
+def preESet : ℕ → Set ℝ -- useless ?
+  | 0 => Dinit
+  | Nat.succ n => T_L '' preESet n ∪ T_R '' preESet n
+def ESet := iInf preESet
+
+def isTriadicCantor (b : ℕ → ℕ) (k : ℕ ) : Prop := (isTriadic b) ∧(∀ n ≤ k, (b n = 0) ∨ (b n =2))
+
+def DSet (n: ℕ ) : Set ℝ :=
+if n=0 then Dinit else { x : ℝ | ∃ b : ℕ → ℕ , (isTriadicCantor b n) ∧ (x=tsum (fTriadic b))}
+
+lemma  eqDSet {x : ℝ }(n : ℕ )   : x ∈ DSet (n+1) ↔ x ∈  T_L '' DSet n ∪ T_R '' DSet n := by
+  apply Iff.intro
+  · intro H
+    sorry
+  · intro H
+    apply Or.elim H
+    . intro H1
+      sorry
+    . intro H2
+      sorry
+
+
+lemma same_sets (n : ℕ ) : preESet n = DSet n := by
+  unfold DSet
+  unfold preESet
+  induction n with
+  | zero =>
+    simp
+  | succ n ih =>
+
+    sorry
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------
+-- premiers essais sur bijection entre Cantor set et {0,1}^N
 
 noncomputable def map_to_real : (f : ℕ → Bool) → (ℕ → ℝ)  :=  by
   intro f n
@@ -97,14 +430,7 @@ lemma inequalities_map_to_real  (f : ℕ → Bool) (n : ℕ) (h : f 0 = true):
     rw [pow_le_pow_iff_right]
     exact J
     simp
-   have L : (2:ℝ ) ≤ 3^n := by
-     have : ((2: ℝ) ≤ 3^1) := by
-      simp
-      rw [@Nat.ofNat_le]
-      simp
-     apply transitive_le
-     · exact this
-     · exact K
+   have L : (2:ℝ ) ≤ 3^n := by linarith
    rw [@div_le_one_iff]
    left
    and_intros
@@ -115,18 +441,13 @@ lemma inequalities_map_to_real  (f : ℕ → Bool) (n : ℕ) (h : f 0 = true):
 
 
 lemma summable_map  (f : ℕ → Bool) : Summable (map_to_real f) := by
-  apply Summable.of_norm_bounded g geo_sum
+  apply Summable.of_norm_bounded g geo_sum.1
   intro i
-  unfold g
-  unfold map_to_real
-  simp
+  unfold g map_to_real
   ring_nf
   cases f i with
   | false =>
     simp
-    have h : |((3 :ℝ ) ^ i)⁻¹ * 2| =(3 ^ i)⁻¹ * 2 := by
-      simp
-    rw [h]
   | true =>
     simp
 
@@ -231,6 +552,27 @@ lemma Cantor_set_preperfect_tryadic_proof : Preperfect Cantor_set := by
   sorry
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------------
 --- Lorenzo
 
 lemma foo (hx : x ∈  Cantor_set) (n :ℕ) (hnice : ∀ a<n, x≠ (a:ℝ)/3^n) :
